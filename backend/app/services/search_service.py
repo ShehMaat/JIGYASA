@@ -1,15 +1,24 @@
 import logging
 from typing import List, Dict, Any
 from urllib.parse import urlparse
-from duckduckgo_search import DDGS
 
 logger = logging.getLogger(__name__)
+
+# Resilient import supporting both new `ddgs` package and `duckduckgo_search`
+try:
+    from ddgs import DDGS
+except ImportError:
+    try:
+        from duckduckgo_search import DDGS
+    except ImportError:
+        DDGS = None
+        logger.warning("Neither 'ddgs' nor 'duckduckgo_search' is installed. Search fallback active.")
 
 
 class WebSearchService:
     """
-    Performs real-time web searches using DuckDuckGo to extract live competitor
-    data, pricing pages, market reports, and industry news with verified URLs.
+    Performs real-time web searches to extract live competitor data,
+    pricing pages, market reports, and industry news with verified URLs.
     """
 
     @staticmethod
@@ -24,17 +33,21 @@ class WebSearchService:
         
         def add_citations(items, category):
             for r in items:
-                url = r.get("href", "")
+                url = r.get("href") or r.get("url") or ""
                 domain = urlparse(url).netloc.replace("www.", "") if url else "web-source"
                 citation = {
                     "source": domain,
                     "title": r.get("title", f"Web Evidence: {category}"),
                     "url": url,
-                    "snippet": r.get("body", ""),
+                    "snippet": r.get("body") or r.get("snippet") or "",
                     "category": category,
                     "confidence_score": 0.94
                 }
                 results["all_citations"].append(citation)
+
+        if not DDGS:
+            logger.info("Search package not available, returning simulated market signals.")
+            return results
 
         try:
             with DDGS() as ddgs:
