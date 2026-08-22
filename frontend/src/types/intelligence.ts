@@ -41,6 +41,17 @@ export interface MarketOverview {
   key_trends: string[];
 }
 
+export interface SourcedCitation {
+  source: string;
+  title?: string;
+  url?: string;
+  snippet?: string;
+  category?: string;
+  collected_at?: string;
+  confidence_score?: number;
+  notes?: string;
+}
+
 export interface MarketReport {
   id: string;
   task_id: string;
@@ -52,12 +63,7 @@ export interface MarketReport {
   swot_analysis: SWOTAnalysis;
   strategic_recommendations: StrategicRecommendation[];
   risk_matrix: RiskItem[];
-  raw_evidence?: Array<{
-    source: string;
-    collected_at: string;
-    confidence_score: number;
-    notes: string;
-  }>;
+  raw_evidence?: SourcedCitation[];
   created_at: string;
 }
 

@@ -2,7 +2,7 @@ import json
 import logging
 import re
 from typing import Dict, Any, List, Optional
-from datetime import datetime
+from datetime import datetime, timezone
 from openai import OpenAI
 
 from app.core.config import settings
@@ -29,7 +29,7 @@ def get_llm_client() -> Optional[OpenAI]:
 class MarketResearchAgent:
     """
     Autonomous Market Intelligence Agent powered by live web search (DuckDuckGo)
-    and high-performance LLMs (Groq Llama 3.3 70B / OpenAI).
+    and high-performance LLMs (Groq 120B / OpenAI).
     """
 
     def __init__(
@@ -60,16 +60,20 @@ class MarketResearchAgent:
             industry=self.industry,
             target_competitors=self.target_competitors
         )
-        total_signals = sum(len(v) for v in web_signals.values())
-        report_step("Evidence Ingestion", 45, f"Ingested {total_signals} live web signals across pricing, competitor comparisons, and industry TAM.")
+        total_signals = sum(len(v) for k, v in web_signals.items() if k != "all_citations")
+        citations = web_signals.get("all_citations", [])
+        report_step("Evidence Ingestion", 45, f"Ingested {total_signals} live web signals & {len(citations)} verified reference sources.")
 
-        # Step 2: LLM Synthesis with Groq / Llama 3.3 70B
-        report_step("AI Synthesis (Llama 3.3)", 70, f"Prompting {settings.LLM_MODEL} on Groq to synthesize structured SWOT, battlecards & TAM...")
+        # Step 2: LLM Synthesis with Groq / 120B
+        report_step("AI Synthesis (Groq 120B)", 70, f"Prompting {settings.LLM_MODEL} on Groq to synthesize structured SWOT, battlecards & TAM...")
         
         client = get_llm_client()
         if client and (settings.GROQ_API_KEY or settings.OPENAI_API_KEY):
             try:
                 report_data = self._generate_with_llm(client, web_signals)
+                # Ensure crawled web citations are attached with real URLs
+                if citations:
+                    report_data["raw_evidence"] = citations
                 report_step("Quality Validation", 90, "Validating structured dossier completeness and strategic action items...")
                 report_step("Completed", 100, f"Successfully synthesized genuine market dossier for {self.company_name}.")
                 return report_data
@@ -79,18 +83,20 @@ class MarketResearchAgent:
 
         # Dynamic heuristic fallback if LLM call fails
         report_data = self._generate_dynamic_fallback(web_signals)
+        if citations:
+            report_data["raw_evidence"] = citations
         report_step("Completed", 100, f"Market dossier for {self.company_name} compiled.")
         return report_data
 
     def _generate_with_llm(self, client: OpenAI, web_signals: Dict[str, Any]) -> Dict[str, Any]:
-        """Calls Groq Llama 3.3 70B to generate structured market intelligence from live crawled web signals."""
+        """Calls Groq 120B model to generate structured market intelligence from live crawled web signals."""
         
         prompt = f"""
 You are Alkame's Principal Market Intelligence and Competitive Strategy AI Agent.
 Analyze the target company '{self.company_name}' in the '{self.industry}' industry based on the following real-time web research:
 
 LIVE SEARCH SIGNALS:
-{json.dumps(web_signals, indent=2)}
+{json.dumps({k: v for k, v in web_signals.items() if k != 'all_citations'}, indent=2)}
 
 USER SPECIFIED COMPETITORS:
 {json.dumps(self.target_competitors)}
@@ -179,14 +185,7 @@ Do NOT wrap the output in markdown formatting like ```json or anything else. Ret
       "mitigation_strategy": "Concrete mitigation action."
     }}
   ],
-  "raw_evidence": [
-    {{
-      "source": "Live Web Crawl & Search Signals",
-      "collected_at": "{datetime.utcnow().isoformat()}",
-      "confidence_score": 0.95,
-      "notes": "Verified against real-time DuckDuckGo search queries across pricing and competitor landscape."
-    }}
-  ]
+  "raw_evidence": []
 }}
 """
 
@@ -202,7 +201,6 @@ Do NOT wrap the output in markdown formatting like ```json or anything else. Ret
 
         content = response.choices[0].message.content.strip()
         
-        # Remove any leading/trailing markdown code fences if present
         if content.startswith("```"):
             content = re.sub(r"^```(?:json)?\n?", "", content)
             content = re.sub(r"\n?```$", "", content)
@@ -284,12 +282,5 @@ Do NOT wrap the output in markdown formatting like ```json or anything else. Ret
                     "mitigation_strategy": "Focus on high-value differentiated capabilities that competitors cannot match easily."
                 }
             ],
-            "raw_evidence": [
-                {
-                    "source": "DuckDuckGo Real-time Web Crawl",
-                    "collected_at": datetime.utcnow().isoformat(),
-                    "confidence_score": 0.92,
-                    "notes": f"Aggregated {sum(len(v) for v in web_signals.values())} search signals."
-                }
-            ]
+            "raw_evidence": []
         }
