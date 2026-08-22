@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 from typing import List, Optional, Dict, Any
 from datetime import datetime
 from enum import Enum
@@ -73,6 +73,8 @@ class LogEntry(BaseModel):
 
 # Full Report Response Schema
 class MarketReportResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     task_id: str
     project_id: Optional[str] = None
@@ -86,12 +88,26 @@ class MarketReportResponse(BaseModel):
     raw_evidence: Optional[List[Dict[str, Any]]] = []
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+
+class ReportSummaryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    title: str
+    executive_summary: str
+    competitor_count: int
+    recommendation_count: int
+    risk_count: int
+    evidence_count: int
+    tam: Optional[str] = None
+    cagr: Optional[str] = None
+    created_at: datetime
 
 
 # Task Status Response
 class TaskStatusResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     company_name: str
     industry: str
@@ -104,22 +120,35 @@ class TaskStatusResponse(BaseModel):
     completed_at: Optional[datetime] = None
     report_id: Optional[str] = None
 
-    class Config:
-        from_attributes = True
-
 
 # Project Schemas
 class ProjectCreate(BaseModel):
-    name: str
-    description: Optional[str] = None
+    name: str = Field(..., description="Project name")
+    description: Optional[str] = Field(default="", description="Project description")
 
 
 class ProjectResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: str
     name: str
     description: Optional[str] = None
     created_at: datetime
     updated_at: datetime
 
-    class Config:
-        from_attributes = True
+
+class ProjectListItemResponse(ProjectResponse):
+    report_count: int = 0
+
+
+class ProjectDetailReportItem(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: str
+    title: str
+    executive_summary: str
+    created_at: datetime
+
+
+class ProjectDetailResponse(ProjectResponse):
+    reports: List[ProjectDetailReportItem] = []

@@ -1,6 +1,7 @@
 from app.schemas.intelligence import (
     ResearchRequest,
     MarketReportResponse,
+    ReportSummaryResponse,
     TaskStatusResponse,
     CompetitorProfile,
     SWOTAnalysis,
@@ -9,12 +10,15 @@ from app.schemas.intelligence import (
     MarketOverview,
     ProjectCreate,
     ProjectResponse,
+    ProjectListItemResponse,
+    ProjectDetailResponse,
     TaskStatusEnum
 )
 
 __all__ = [
     "ResearchRequest",
     "MarketReportResponse",
+    "ReportSummaryResponse",
     "TaskStatusResponse",
     "CompetitorProfile",
     "SWOTAnalysis",
@@ -23,5 +27,7 @@ __all__ = [
     "MarketOverview",
     "ProjectCreate",
     "ProjectResponse",
+    "ProjectListItemResponse",
+    "ProjectDetailResponse",
     "TaskStatusEnum",
 ]

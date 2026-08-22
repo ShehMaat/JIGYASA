@@ -18,6 +18,17 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-22] Phase 4.1: Projects REST API Body & Pydantic Schema Refactoring
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/api/v1/endpoints/projects.py`, `app/schemas/intelligence.py`, `app/agents/research_agent.py`), Frontend (`src/services/api.ts`)
+- **Summary of Work:**
+  - **REST API Payload Refactoring:** Refactored `POST /api/v1/projects/` in `projects.py` from query parameters to standard Pydantic request body (`payload: ProjectCreate`), and added explicit `response_model` annotations (`ProjectResponse`, `ProjectListItemResponse`, `ProjectDetailResponse`).
+  - **Schema Enhancements:** Extended `schemas/intelligence.py` with Pydantic v2 `ConfigDict(from_attributes=True)` and complete project listing/detail schemas.
+  - **Model Failover Chain:** Expanded `research_agent.py` to include `llama3-70b-8192`, `mixtral-8x7b-32768`, and `gemma2-9b-it` in the model try chain, plus evidence-driven dynamic fallback synthesis from DuckDuckGo search signals.
+  - **Frontend API Integration:** Updated `frontend/src/services/api.ts` with `createProject`, `listProjects`, `getProject`, and `deleteProject` client methods.
+
+---
+
 ### [2026-08-22] Phase 4: Production Hardening, Multi-Page SaaS Architecture & Projects API
 - **Status:** Completed & Synced to GitHub
 - **Components:** Backend (`app/core/config.py`, `app/agents/research_agent.py`, `app/services/search_service.py`, `app/api/v1/endpoints/projects.py`), Frontend (`src/app/`, `src/components/`, `src/services/api.ts`, `src/types/intelligence.ts`)

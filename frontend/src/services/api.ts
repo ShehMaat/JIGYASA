@@ -2,6 +2,7 @@ import {
   ResearchRequestPayload,
   TaskStatusResponse,
   MarketReport,
+  Project,
 } from '../types/intelligence';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
@@ -123,8 +124,58 @@ export const intelligenceApi = {
       console.warn('Failed to get report summary:', error);
       return null;
     }
+  },
+
+  async createProject(name: string, description: string = ''): Promise<Project | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, description }),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to create project:', error);
+      return null;
+    }
+  },
+
+  async listProjects(): Promise<Project[]> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list projects:', error);
+      return [];
+    }
+  },
+
+  async getProject(projectId: string): Promise<Project | null> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/${projectId}`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to get project details:', error);
+      return null;
+    }
+  },
+
+  async deleteProject(projectId: string): Promise<boolean> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/projects/${projectId}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete project:', error);
+      return false;
+    }
   }
 };
+
 
 // Client-side fallback simulator helpers
 const localTasks: Record<string, TaskStatusResponse> = {};
