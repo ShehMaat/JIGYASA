@@ -1,6 +1,7 @@
 import json
 import logging
 import re
+import time
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timezone
 from openai import OpenAI
@@ -15,21 +16,67 @@ def get_llm_client() -> Optional[OpenAI]:
     """Returns an OpenAI-compatible client for Groq, OpenAI, Ollama, or OpenRouter."""
     api_key = settings.GROQ_API_KEY or settings.OPENAI_API_KEY or "not-needed"
     base_url = settings.LLM_BASE_URL or "https://api.groq.com/openai/v1"
-    
+
     try:
         return OpenAI(
             api_key=api_key,
-            base_url=base_url
+            base_url=base_url,
+            timeout=settings.LLM_TIMEOUT_SECONDS
         )
     except Exception as e:
         logger.error(f"Failed to initialize LLM client: {e}")
         return None
 
 
+def _safe_parse_json(content: str) -> Optional[Dict[str, Any]]:
+    """
+    Robustly extract and parse JSON from LLM output.
+    Handles markdown fences, trailing commas, partial output, and common LLM quirks.
+    """
+    # Strip markdown code fences
+    cleaned = content.strip()
+    if cleaned.startswith("```"):
+        cleaned = re.sub(r"^```(?:json)?\s*\n?", "", cleaned)
+        cleaned = re.sub(r"\n?```\s*$", "", cleaned)
+
+    # Try direct parse first
+    try:
+        return json.loads(cleaned)
+    except json.JSONDecodeError:
+        pass
+
+    # Try to extract JSON object from surrounding text
+    brace_match = re.search(r'\{', cleaned)
+    if brace_match:
+        depth = 0
+        start = brace_match.start()
+        for i in range(start, len(cleaned)):
+            if cleaned[i] == '{':
+                depth += 1
+            elif cleaned[i] == '}':
+                depth -= 1
+                if depth == 0:
+                    try:
+                        return json.loads(cleaned[start:i + 1])
+                    except json.JSONDecodeError:
+                        break
+
+    # Try fixing trailing commas
+    fixed = re.sub(r',\s*([}\]])', r'\1', cleaned)
+    try:
+        return json.loads(fixed)
+    except json.JSONDecodeError:
+        pass
+
+    logger.warning("All JSON parsing strategies failed on LLM output.")
+    return None
+
+
 class MarketResearchAgent:
     """
     Autonomous Market Intelligence Agent powered by live web search (DuckDuckGo)
-    and high-performance LLMs (Groq 120B / OpenAI).
+    and high-performance LLMs (Groq Llama 3.3 70B / fallback to 8B-instant).
+    Features retry logic with exponential backoff and automatic model failover.
     """
 
     def __init__(
@@ -64,39 +111,82 @@ class MarketResearchAgent:
         citations = web_signals.get("all_citations", [])
         report_step("Evidence Ingestion", 45, f"Ingested {total_signals} live web signals & {len(citations)} verified reference sources.")
 
-        # Step 2: LLM Synthesis with Groq / 120B
-        report_step("AI Synthesis (Groq 120B)", 70, f"Prompting {settings.LLM_MODEL} on Groq to synthesize structured SWOT, battlecards & TAM...")
-        
+        # Step 2: LLM Synthesis with retry & model failover
+        model_name = settings.LLM_MODEL
+        report_step("AI Synthesis", 60, f"Prompting {model_name} to synthesize structured SWOT, battlecards & TAM...")
+
         client = get_llm_client()
         if client and (settings.GROQ_API_KEY or settings.OPENAI_API_KEY):
-            try:
-                report_data = self._generate_with_llm(client, web_signals)
-                # Ensure crawled web citations are attached with real URLs
-                if citations:
-                    report_data["raw_evidence"] = citations
-                report_step("Quality Validation", 90, "Validating structured dossier completeness and strategic action items...")
-                report_step("Completed", 100, f"Successfully synthesized genuine market dossier for {self.company_name}.")
-                return report_data
-            except Exception as e:
-                logger.exception(f"LLM generation failed: {e}. Falling back to dynamic heuristic synthesis.")
-                report_step("Fallback Synthesis", 80, f"LLM error ({e}), synthesizing dynamic report from web signals...")
+            # Try primary model with retries, then fallback model
+            models_to_try = [settings.LLM_MODEL]
+            if settings.LLM_FALLBACK_MODEL and settings.LLM_FALLBACK_MODEL != settings.LLM_MODEL:
+                models_to_try.append(settings.LLM_FALLBACK_MODEL)
+
+            for model_idx, model in enumerate(models_to_try):
+                for attempt in range(1, settings.LLM_MAX_RETRIES + 1):
+                    try:
+                        if model_idx > 0:
+                            report_step("Model Failover", 65, f"Switching to fallback model '{model}' (attempt {attempt})...")
+                        elif attempt > 1:
+                            report_step("Retry", 65, f"Retrying {model} (attempt {attempt}/{settings.LLM_MAX_RETRIES})...")
+
+                        report_data = self._generate_with_llm(client, web_signals, model)
+                        # Attach crawled web citations with real URLs
+                        if citations:
+                            report_data["raw_evidence"] = citations
+                        report_step("Quality Validation", 90, "Validating structured dossier completeness and strategic action items...")
+                        report_step("Completed", 100, f"Successfully synthesized genuine market dossier for {self.company_name} via {model}.")
+                        return report_data
+
+                    except json.JSONDecodeError as e:
+                        logger.warning(f"JSON parse error on {model} attempt {attempt}: {e}")
+                        if attempt < settings.LLM_MAX_RETRIES:
+                            time.sleep(1.5 * attempt)  # Exponential-ish backoff
+                        continue
+
+                    except Exception as e:
+                        error_str = str(e).lower()
+                        logger.warning(f"LLM call failed on {model} attempt {attempt}: {e}")
+
+                        # Rate limit — wait longer
+                        if "rate_limit" in error_str or "429" in error_str:
+                            wait = min(10, 2 ** attempt)
+                            report_step("Rate Limited", 62, f"Rate limited by {model}, waiting {wait}s...")
+                            time.sleep(wait)
+                        elif attempt < settings.LLM_MAX_RETRIES:
+                            time.sleep(1.0 * attempt)
+                        continue
+
+                logger.warning(f"All {settings.LLM_MAX_RETRIES} attempts exhausted for model '{model}'.")
+
+            report_step("Fallback Synthesis", 80, "All LLM models exhausted, synthesizing report from web signals...")
 
         # Dynamic heuristic fallback if LLM call fails
         report_data = self._generate_dynamic_fallback(web_signals)
         if citations:
             report_data["raw_evidence"] = citations
-        report_step("Completed", 100, f"Market dossier for {self.company_name} compiled.")
+        report_step("Completed", 100, f"Market dossier for {self.company_name} compiled (heuristic mode).")
         return report_data
 
-    def _generate_with_llm(self, client: OpenAI, web_signals: Dict[str, Any]) -> Dict[str, Any]:
-        """Calls Groq 120B model to generate structured market intelligence from live crawled web signals."""
-        
+    def _generate_with_llm(self, client: OpenAI, web_signals: Dict[str, Any], model: str) -> Dict[str, Any]:
+        """Calls the specified LLM model to generate structured market intelligence from live crawled web signals."""
+
+        # Truncate web signals to avoid token overflow
+        truncated_signals = {}
+        for k, v in web_signals.items():
+            if k == "all_citations":
+                continue
+            if isinstance(v, list):
+                truncated_signals[k] = v[:5]  # Max 5 items per category
+            else:
+                truncated_signals[k] = v
+
         prompt = f"""
 You are Alkame's Principal Market Intelligence and Competitive Strategy AI Agent.
 Analyze the target company '{self.company_name}' in the '{self.industry}' industry based on the following real-time web research:
 
 LIVE SEARCH SIGNALS:
-{json.dumps({k: v for k, v in web_signals.items() if k != 'all_citations'}, indent=2)}
+{json.dumps(truncated_signals, indent=2)}
 
 USER SPECIFIED COMPETITORS:
 {json.dumps(self.target_competitors)}
@@ -190,22 +280,41 @@ Do NOT wrap the output in markdown formatting like ```json or anything else. Ret
 """
 
         response = client.chat.completions.create(
-            model=settings.LLM_MODEL,
+            model=model,
             messages=[
-                {"role": "system", "content": "You are a world-class Market Intelligence & Competitive Strategy Analyst. Always return valid, well-formed, pure JSON."},
+                {"role": "system", "content": "You are a world-class Market Intelligence & Competitive Strategy Analyst. Always return valid, well-formed, pure JSON. Never wrap in markdown code fences."},
                 {"role": "user", "content": prompt}
             ],
             temperature=0.3,
-            max_tokens=3500
+            max_tokens=4000
         )
 
         content = response.choices[0].message.content.strip()
-        
-        if content.startswith("```"):
-            content = re.sub(r"^```(?:json)?\n?", "", content)
-            content = re.sub(r"\n?```$", "", content)
-        
-        parsed = json.loads(content)
+        parsed = _safe_parse_json(content)
+
+        if parsed is None:
+            raise json.JSONDecodeError("Failed to parse LLM output after all strategies", content, 0)
+
+        # Validate required top-level keys exist
+        required_keys = ["title", "executive_summary", "swot_analysis", "competitor_analysis"]
+        missing = [k for k in required_keys if k not in parsed]
+        if missing:
+            logger.warning(f"LLM output missing keys: {missing}. Filling defaults.")
+            if "title" not in parsed:
+                parsed["title"] = f"Market Intelligence & Competitor Dossier: {self.company_name}"
+            if "executive_summary" not in parsed:
+                parsed["executive_summary"] = f"Market intelligence analysis for {self.company_name} in the {self.industry} sector."
+            if "swot_analysis" not in parsed:
+                parsed["swot_analysis"] = {"strengths": [], "weaknesses": [], "opportunities": [], "threats": []}
+            if "competitor_analysis" not in parsed:
+                parsed["competitor_analysis"] = []
+            if "market_overview" not in parsed:
+                parsed["market_overview"] = {"tam": "N/A", "sam": "N/A", "som": "N/A", "cagr": "N/A", "key_trends": []}
+            if "strategic_recommendations" not in parsed:
+                parsed["strategic_recommendations"] = []
+            if "risk_matrix" not in parsed:
+                parsed["risk_matrix"] = []
+
         return parsed
 
     def _generate_dynamic_fallback(self, web_signals: Dict[str, Any]) -> Dict[str, Any]:

@@ -95,6 +95,34 @@ export const intelligenceApi = {
     } catch (e) {
       console.warn('Backend export failed, downloading local client report as markdown:', e);
     }
+  },
+
+  async deleteReport(reportId: string): Promise<{ message: string }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to delete report:', error);
+      return { message: 'Failed to delete report' };
+    }
+  },
+
+  async getReportSummary(reportId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}/summary`);
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to get report summary:', error);
+      return null;
+    }
   }
 };
 

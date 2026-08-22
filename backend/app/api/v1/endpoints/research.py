@@ -160,3 +160,46 @@ def quick_analyze(request: ResearchRequest, db: Session = Depends(get_db)):
     """
     report = ResearchService.execute_quick_sync(db, request)
     return report
+
+
+@router.delete("/reports/{report_id}", summary="Delete Market Report")
+def delete_market_report(report_id: str, db: Session = Depends(get_db)):
+    """
+    Deletes a market intelligence report by ID.
+    """
+    report = db.query(MarketReport).filter(MarketReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail=f"Market report '{report_id}' not found.")
+
+    # Also delete the associated task if it exists
+    task = db.query(ResearchTask).filter(ResearchTask.id == report.task_id).first()
+
+    db.delete(report)
+    if task:
+        db.delete(task)
+    db.commit()
+    return {"message": f"Report '{report_id}' deleted successfully."}
+
+
+@router.get("/reports/{report_id}/summary", summary="Get Report Summary Preview")
+def get_report_summary(report_id: str, db: Session = Depends(get_db)):
+    """
+    Returns a lightweight preview of a report without full data.
+    """
+    report = db.query(MarketReport).filter(MarketReport.id == report_id).first()
+    if not report:
+        raise HTTPException(status_code=404, detail=f"Market report '{report_id}' not found.")
+
+    return {
+        "id": report.id,
+        "title": report.title,
+        "executive_summary": report.executive_summary,
+        "competitor_count": len(report.competitor_analysis) if report.competitor_analysis else 0,
+        "recommendation_count": len(report.strategic_recommendations) if report.strategic_recommendations else 0,
+        "risk_count": len(report.risk_matrix) if report.risk_matrix else 0,
+        "evidence_count": len(report.raw_evidence) if report.raw_evidence else 0,
+        "tam": report.market_overview.get("tam") if report.market_overview else None,
+        "cagr": report.market_overview.get("cagr") if report.market_overview else None,
+        "created_at": report.created_at
+    }
+

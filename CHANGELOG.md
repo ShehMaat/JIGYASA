@@ -18,6 +18,23 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-22] Phase 4: Production Hardening, Multi-Page SaaS Architecture & Projects API
+- **Status:** Completed & Synced to GitHub
+- **Components:** Backend (`app/core/config.py`, `app/agents/research_agent.py`, `app/services/search_service.py`, `app/api/v1/endpoints/projects.py`), Frontend (`src/app/`, `src/components/`, `src/services/api.ts`, `src/types/intelligence.ts`)
+- **Summary of Work:**
+  - **LLM Model Verification & Resilience:** Updated `config.py` to `llama-3.3-70b-versatile` with automatic failover to `llama-3.1-8b-instant`. Added exponential backoff retries and multi-tier JSON parse recovery to `research_agent.py`.
+  - **Crawler Rate Limit Awareness:** Enhanced `search_service.py` with delay bursts, timeout handling, and rate-limit backoff logic.
+  - **Research Projects API:** Built `projects.py` REST endpoints (`POST /projects`, `GET /projects`, `GET /projects/{id}`, `DELETE /projects/{id}`) and added report deletion & summary preview endpoints.
+  - **Multi-Page SaaS Frontend Refactoring:** Split monolithic `page.tsx` into modular Next.js App Router pages:
+    - `/` Dashboard with live KPI stats cards, recent reports grid, and quick launcher.
+    - `/research` Dedicated research configuration form & live agent execution monitor.
+    - `/reports` Full report history grid with live search filtering and report deletion.
+    - `/reports/[id]` Interactive 7-tab report viewer (Overview, Competitors, Matrix, SWOT, Strategy, Risks, Evidence) with Markdown export & PDF printing.
+    - `/settings` System configuration overview & developer API documentation links.
+  - **Navigation Sidebar & Styling:** Created `Sidebar.tsx` with glassmorphic styling, active indicators, responsive mobile overlay, and page entrance animations in `globals.css`.
+
+---
+
 ### [2026-08-22] Phase 3.1: Crawler Import Resilience & IDE Python Environment Binding
 - **Status:** Completed & Synced to GitHub
 - **Components:** Backend (`app/services/search_service.py`), IDE Settings (`.vscode/settings.json`)

@@ -95,3 +95,25 @@ export interface ResearchRequestPayload {
   depth?: 'quick' | 'standard' | 'comprehensive';
   project_id?: string | null;
 }
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  created_at: string;
+  report_count?: number;
+}
+
+export interface ReportSummary {
+  id: string;
+  title: string;
+  executive_summary: string;
+  competitor_count: number;
+  recommendation_count: number;
+  risk_count: number;
+  evidence_count: number;
+  tam?: string | null;
+  cagr?: string | null;
+  created_at: string;
+}
+

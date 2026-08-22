@@ -14,8 +14,11 @@ class Settings(BaseSettings):
     LLM_PROVIDER: str = "groq"  # "groq", "openai", "ollama", "openrouter"
     GROQ_API_KEY: Optional[str] = None
     OPENAI_API_KEY: Optional[str] = None
-    LLM_MODEL: str = "openai/gpt-oss-120b"
+    LLM_MODEL: str = "llama-3.3-70b-versatile"
+    LLM_FALLBACK_MODEL: str = "llama-3.1-8b-instant"
     LLM_BASE_URL: Optional[str] = "https://api.groq.com/openai/v1"
+    LLM_MAX_RETRIES: int = 3
+    LLM_TIMEOUT_SECONDS: int = 60
 
     # Database
     DATABASE_URL: str = "postgresql://alkame_user:alkame_password@localhost:5432/alkame_db"
