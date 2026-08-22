@@ -18,6 +18,16 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-22] Phase 3.1: Crawler Import Resilience & IDE Python Environment Binding
+- **Status:** Completed & Synced to GitHub
+- **Components:** Backend (`app/services/search_service.py`), IDE Settings (`.vscode/settings.json`)
+- **Summary of Work:**
+  - **Dual-Package Support:** Added fallback support for both `ddgs` (version >= 9.0) and `duckduckgo_search` with graceful fallback handling.
+  - **IDE Interpreter Configuration:** Added [.vscode/settings.json](file:///e:/Weapon%20X/.vscode/settings.json) to automatically map your editor to the project's virtual environment (`backend/venv/Scripts/python.exe`), resolving any local IDE `ModuleNotFoundError` squiggly lines.
+  - **GitHub Sync:** Pushed directly to `origin/main`.
+
+---
+
 ### [2026-08-22] Phase 3: Verified Sourced Citations, Comparison Matrix, Market Share Visualizer & 1-Click Export
 - **Status:** Completed, Live Verified & Synced to GitHub
 - **Components:** Backend (`app/services/search_service.py`, `app/agents/research_agent.py`, `app/api/v1/endpoints/research.py`), Frontend (`src/app/page.tsx`, `src/types/intelligence.ts`, `src/services/api.ts`)
@@ -26,10 +36,6 @@ For every change / commit, we document:
   - **Side-by-Side Comparison Matrix Table:** Added a dedicated tabular matrix in [page.tsx](file:///e:/Weapon%20X/frontend/src/app/page.tsx) comparing all competitor profiles across Positioning, Market Share, Pricing Model, Target Customer Segment, and Competitive Moat simultaneously.
   - **Visual Market Share Distribution:** Implemented animated market share progress bars breaking down competitor footprint.
   - **1-Click Export Suite:** Built `GET /api/v1/research/reports/{id}/export` endpoint and frontend quick-export buttons for 1-click Markdown download, PDF print (`window.print()`), and instant executive summary clipboard copy.
-- **Verification:**
-  - `GET /api/v1/research/reports/{id}/export` tested and verified returning presentation-grade markdown dossiers.
-  - Frontend production build (`npm.cmd run build`) completed with 0 errors.
-  - Changes pushed to GitHub repository (`origin/main`).
 
 ---
 
