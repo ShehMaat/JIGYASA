@@ -7,7 +7,6 @@ import { MarketReport } from '../../types/intelligence';
 
 export default function ReportsListPage() {
   const [reports, setReports] = useState<MarketReport[]>([]);
-  const [filteredReports, setFilteredReports] = useState<MarketReport[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -16,7 +15,6 @@ export default function ReportsListPage() {
       try {
         const list = await intelligenceApi.listReports();
         setReports(list);
-        setFilteredReports(list);
       } catch {
         // fallback
       } finally {
@@ -26,20 +24,14 @@ export default function ReportsListPage() {
     load();
   }, []);
 
-  useEffect(() => {
-    if (!searchQuery.trim()) {
-      setFilteredReports(reports);
-    } else {
-      const q = searchQuery.toLowerCase();
-      setFilteredReports(
-        reports.filter(
-          (r) =>
-            r.title.toLowerCase().includes(q) ||
-            r.executive_summary?.toLowerCase().includes(q)
-        )
-      );
-    }
-  }, [searchQuery, reports]);
+  const filteredReports = searchQuery.trim()
+    ? reports.filter(
+        (r) =>
+          r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          r.executive_summary?.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+    : reports;
+
 
   const handleDelete = async (reportId: string) => {
     if (!confirm('Are you sure you want to delete this report?')) return;

@@ -58,7 +58,7 @@ export const intelligenceApi = {
         throw new Error(`Server returned ${response.status}`);
       }
       return await response.json();
-    } catch (error) {
+    } catch {
       return getLocalStoredReports();
     }
   },
@@ -74,7 +74,7 @@ export const intelligenceApi = {
         throw new Error(`Server returned ${response.status}`);
       }
       return await response.json();
-    } catch (error) {
+    } catch {
       return generateFullReport(payload);
     }
   },

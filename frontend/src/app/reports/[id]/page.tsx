@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { intelligenceApi } from '../../../services/api';
 import { MarketReport } from '../../../types/intelligence';
@@ -20,8 +20,8 @@ const TABS: { key: TabKey; label: string; icon: string }[] = [
 
 export default function ReportViewerPage() {
   const params = useParams();
-  const router = useRouter();
   const reportId = params.id as string;
+
 
   const [report, setReport] = useState<MarketReport | null>(null);
   const [isLoading, setIsLoading] = useState(true);
