@@ -10,14 +10,18 @@ class Settings(BaseSettings):
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
 
+    # LLM Settings
+    LLM_PROVIDER: str = "groq"  # "groq", "openai", "ollama", "openrouter"
+    GROQ_API_KEY: Optional[str] = None
+    OPENAI_API_KEY: Optional[str] = None
+    LLM_MODEL: str = "openai/gpt-oss-120b"
+    LLM_BASE_URL: Optional[str] = "https://api.groq.com/openai/v1"
+
     # Database
     DATABASE_URL: str = "postgresql://alkame_user:alkame_password@localhost:5432/alkame_db"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
-
-    # OpenAI
-    OPENAI_API_KEY: Optional[str] = None
 
     # CORS
     FRONTEND_URL: str = "http://localhost:3000"
@@ -30,6 +34,7 @@ class Settings(BaseSettings):
         "env_file": ".env",
         "env_file_encoding": "utf-8",
         "case_sensitive": True,
+        "extra": "ignore"
     }
 
 
