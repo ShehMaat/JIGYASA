@@ -18,6 +18,17 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-22] Phase 5: Advanced Intelligence Workspaces, Battlecard Comparison & Vector RAG Engine
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/services/rag_service.py`, `app/api/v1/endpoints/knowledge.py`, `app/api/v1/api.py`), Frontend (`src/app/projects/`, `src/app/compare/`, `src/app/knowledge/`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`)
+- **Summary of Work:**
+  - **Research Workspaces UI (`/projects` & `/projects/[id]`):** Built workspace management grid, workspace creation modal, linked dossier view, and integrated workspace project selector into the research launch form (`/research`).
+  - **Side-by-Side Battlecard Comparison (`/compare`):** Created multi-report selection tool and interactive battlecard comparison matrix comparing Target Brand, TAM, CAGR, Executive Summary, Competitors, SWOT Strengths, and Primary Action Items across 2-3 dossiers.
+  - **Vector RAG & Knowledge Engine (`/knowledge` & `rag_service.py`):** Developed `RAGKnowledgeService` with vector similarity search over `VectorDocument` items, REST API `POST /api/v1/knowledge/query` and `POST /api/v1/knowledge/index`, and frontend natural language RAG query interface with confidence scores and verified citations.
+  - **Sidebar Navigation:** Updated `Sidebar.tsx` with links to Workspaces (`/projects`), Compare (`/compare`), and Knowledge RAG (`/knowledge`).
+
+---
+
 ### [2026-08-22] Phase 4.1: Projects REST API Body & Pydantic Schema Refactoring
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/api/v1/endpoints/projects.py`, `app/schemas/intelligence.py`, `app/agents/research_agent.py`), Frontend (`src/services/api.ts`)

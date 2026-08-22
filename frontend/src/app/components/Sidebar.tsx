@@ -13,6 +13,9 @@ interface NavItem {
 const mainNav: NavItem[] = [
   { label: 'Dashboard', href: '/', icon: '📊' },
   { label: 'New Research', href: '/research', icon: '🔬' },
+  { label: 'Workspaces', href: '/projects', icon: '📁' },
+  { label: 'Compare Matrix', href: '/compare', icon: '📐' },
+  { label: 'Knowledge RAG', href: '/knowledge', icon: '🧠' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
 

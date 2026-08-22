@@ -21,6 +21,8 @@ export default function ResearchPage() {
   const [companyName, setCompanyName] = useState('');
   const [industry, setIndustry] = useState('');
   const [competitors, setCompetitors] = useState('');
+  const [selectedProjectId, setSelectedProjectId] = useState<string>('');
+  const [projects, setProjects] = useState<Array<{ id: string; name: string }>>([]);
   const [depth, setDepth] = useState<'quick' | 'standard' | 'comprehensive'>('standard');
   const [selectedFocus, setSelectedFocus] = useState<string[]>([
     'pricing', 'features', 'market_share', 'gtm_strategy',
@@ -29,6 +31,18 @@ export default function ResearchPage() {
   // Execution
   const [currentTask, setCurrentTask] = useState<TaskStatusResponse | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const list = await intelligenceApi.listProjects();
+        setProjects(list);
+      } catch {
+        // fallback
+      }
+    }
+    fetchProjects();
+  }, []);
 
   // Poll task
   useEffect(() => {
@@ -75,6 +89,7 @@ export default function ResearchPage() {
         target_competitors: parsedComps,
         focus_areas: selectedFocus,
         depth: depth,
+        project_id: selectedProjectId || undefined,
       });
       setCurrentTask(task);
     } catch (err) {
@@ -153,6 +168,26 @@ export default function ResearchPage() {
               id="competitors-input"
             />
           </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+              Assign to Workspace Project (Optional)
+            </label>
+            <select
+              className="input-field"
+              value={selectedProjectId}
+              onChange={(e) => setSelectedProjectId(e.target.value)}
+              id="project-select"
+            >
+              <option value="">-- Standalone (No Workspace) --</option>
+              {projects.map((p) => (
+                <option key={p.id} value={p.id}>
+                  📁 {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
 
           {/* Depth Selector */}
           <div style={{ marginBottom: '20px' }}>
