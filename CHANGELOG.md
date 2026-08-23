@@ -22,7 +22,7 @@ For every change / commit, we document:
 
 ### [2026-08-23] Phase 19: AI Executive Briefing Podcaster & Audio Synthesis Engine
 - **Status:** Completed ✅
-- **Commit:** `TBD — pending push`
+- **Commit:** `c9f89b1`
 - **Components:** Backend (`app/api/v1/endpoints/podcast.py`), Frontend (`AudioBriefingPlayer.tsx`, `reports/[id]/page.tsx`, `api.ts`)
 - **Summary of Work:**
   - Built `GET /api/v1/research/reports/{id}/podcast` — generates a 2-host conversational briefing script (Alex: Executive Anchor, Dr. Maya: Chief Analyst) with turn-by-turn timestamps & Web Speech synthesis configs.
