@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "./components/Sidebar";
 import CommandPalette from "./components/CommandPalette";
+import { AuthProvider } from "../context/AuthContext";
 
 export const metadata: Metadata = {
   title: "Alkame Intelligence — AI Market Research & Competitor Analysis Platform",
@@ -21,13 +22,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
       <body>
-        <div className="app-layout">
-          <Sidebar />
-          <CommandPalette />
-          <main className="app-main">
-            {children}
-          </main>
-        </div>
+        <AuthProvider>
+          <div className="app-layout">
+            <Sidebar />
+            <CommandPalette />
+            <main className="app-main">
+              {children}
+            </main>
+          </div>
+        </AuthProvider>
       </body>
     </html>
   );

@@ -321,6 +321,54 @@ export const intelligenceApi = {
       console.warn('Failed to delete tracker:', error);
       return false;
     }
+  },
+
+  async registerUser(email: string, password: string, fullName?: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password, full_name: fullName }),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to register user:', error);
+      return null;
+    }
+  },
+
+  async loginUser(email: string, password: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to login user:', error);
+      return null;
+    }
+  },
+
+  async getMe(token?: string) {
+    try {
+      const jwtToken = token || localStorage.getItem('alkame_jwt_token');
+      if (!jwtToken) return null;
+
+      const response = await fetch(`${API_BASE_URL}/auth/me`, {
+        headers: {
+          'Authorization': `Bearer ${jwtToken}`,
+        },
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch authenticated user profile:', error);
+      return null;
+    }
   }
 };
 

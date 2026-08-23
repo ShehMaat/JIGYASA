@@ -18,6 +18,18 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 8: User Authentication, Role-Based Access Control & JWT Security
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/models/user.py`, `app/core/security.py`, `app/api/v1/endpoints/auth.py`, `app/core/database.py`, `app/api/v1/api.py`), Frontend (`src/context/AuthContext.tsx`, `src/app/login/page.tsx`, `src/app/layout.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`)
+- **Summary of Work:**
+  - **Backend Security & Hashing (`security.py`)**: Created `User` database model, direct bcrypt password hashing/verification, and JWT access token creation/decoding (`HS256`, 7-day expiry) with `get_current_user` dependency.
+  - **Auth REST API (`auth.py`)**: Implemented `POST /api/v1/auth/register`, `POST /api/v1/auth/login`, and `GET /api/v1/auth/me` endpoints.
+  - **Frontend Auth Context & Portal (`/login`)**: Built `AuthContext.tsx` managing user session state and `localStorage` JWT token storage. Built glassmorphic login & signup portal in `login/page.tsx` with tabbed form selection.
+  - **User Profile Badge & Logout (`Sidebar.tsx`)**: Integrated active user profile badge, email display, role tag (`analyst`), and quick sign-out action in the sidebar.
+  - **Verification**: Verified clean Next.js static build (`npm.cmd run build` — 12 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), user registration REST API test, login authentication test, and JWT token bearer profile verification test.
+
+---
+
 ### [2026-08-23] Phase 7: Document File Ingestion (PDF/TXT/MD) & Real-Time Live Agent SSE Event Streaming
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/api/v1/endpoints/knowledge.py`, `app/api/v1/endpoints/research.py`), Frontend (`src/app/knowledge/page.tsx`, `src/app/research/page.tsx`, `src/services/api.ts`, `src/types/intelligence.ts`)

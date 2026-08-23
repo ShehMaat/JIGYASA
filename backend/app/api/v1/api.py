@@ -1,7 +1,8 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import research, projects, knowledge, monitoring
+from app.api.v1.endpoints import research, projects, knowledge, monitoring, auth
 
 api_router = APIRouter()
+api_router.include_router(auth.router)
 api_router.include_router(research.router)
 api_router.include_router(projects.router)
 api_router.include_router(knowledge.router)

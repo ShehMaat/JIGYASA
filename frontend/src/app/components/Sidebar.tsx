@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useAuth } from '../../context/AuthContext';
 
 interface NavItem {
   label: string;
@@ -26,6 +27,7 @@ const settingsNav: NavItem[] = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const isActive = (href: string) => {
@@ -107,8 +109,36 @@ export default function Sidebar() {
           ))}
         </nav>
 
-        {/* Footer Status */}
+        {/* Footer Status & Auth Profile */}
         <div className="sidebar-footer">
+          {user ? (
+            <div style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid var(--border-color)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '0.82rem', fontWeight: '600', color: 'var(--text-main)' }}>
+                  👤 {user.full_name || user.email.split('@')[0]}
+                </span>
+                <span className="badge badge-primary" style={{ fontSize: '0.65rem' }}>{user.role}</span>
+              </div>
+              <p style={{ fontSize: '0.72rem', color: 'var(--text-subtle)', marginBottom: '8px' }}>{user.email}</p>
+              <button
+                type="button"
+                className="btn-secondary"
+                style={{ width: '100%', fontSize: '0.75rem', padding: '4px 8px' }}
+                onClick={logout}
+              >
+                🚪 Sign Out
+              </button>
+            </div>
+          ) : (
+            <div style={{ marginBottom: '10px', paddingBottom: '10px', borderBottom: '1px solid var(--border-color)' }}>
+              <Link href="/login" style={{ textDecoration: 'none' }}>
+                <button type="button" className="btn-primary" style={{ width: '100%', fontSize: '0.78rem', padding: '6px' }}>
+                  🔑 Sign In / Register
+                </button>
+              </Link>
+            </div>
+          )}
+
           <div className="sidebar-status">
             <div className="sidebar-status-dot" />
             <span className="sidebar-status-text">Groq LLM Online</span>
