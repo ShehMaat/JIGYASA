@@ -20,6 +20,7 @@ const mainNav: NavItem[] = [
   { label: 'Monitoring', href: '/monitoring', icon: '📡' },
   { label: 'Analytics', href: '/analytics', icon: '📈' },
   { label: 'Prompt Studio', href: '/prompts', icon: '🤖' },
+  { label: 'Scheduled Research', href: '/scheduled', icon: '⏰' },
   { label: 'Activity Feed', href: '/activity', icon: '📣' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];

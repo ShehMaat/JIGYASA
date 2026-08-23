@@ -521,6 +521,77 @@ export const intelligenceApi = {
       return [];
     }
   },
+
+  // ─── Phase 15: Scheduled Research ────────────────────────────────────────
+
+  async listSchedules() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list schedules:', error);
+      return [];
+    }
+  },
+
+  async createSchedule(payload: { company_name: string; industry: string; focus_areas?: string[]; frequency: string }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to create schedule:', error);
+      return null;
+    }
+  },
+
+  async toggleSchedule(scheduleId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/${scheduleId}/toggle`, { method: 'PATCH' });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to toggle schedule:', error);
+      return null;
+    }
+  },
+
+  async runScheduleNow(scheduleId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/${scheduleId}/run-now`, { method: 'POST' });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to run schedule now:', error);
+      return null;
+    }
+  },
+
+  async deleteSchedule(scheduleId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/${scheduleId}`, { method: 'DELETE' });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete schedule:', error);
+      return false;
+    }
+  },
+
+  async getScheduleDigest(scheduleId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/schedules/${scheduleId}/digest`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to get schedule digest:', error);
+      return null;
+    }
+  },
 };
 
 
