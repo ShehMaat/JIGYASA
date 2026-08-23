@@ -7,7 +7,7 @@ import { intelligenceApi } from '../../../services/api';
 import { MarketReport } from '../../../types/intelligence';
 import PresentationModal from '../../components/PresentationModal';
 
-type TabKey = 'overview' | 'competitors' | 'matrix' | 'swot' | 'strategy' | 'risks' | 'evidence';
+type TabKey = 'overview' | 'competitors' | 'matrix' | 'swot' | 'strategy' | 'risks' | 'evidence' | 'comments';
 
 const TABS: { key: TabKey; label: string; icon: string }[] = [
   { key: 'overview', label: 'Overview', icon: '📊' },
@@ -17,6 +17,7 @@ const TABS: { key: TabKey; label: string; icon: string }[] = [
   { key: 'strategy', label: 'Strategy', icon: '🚀' },
   { key: 'risks', label: 'Risks', icon: '⚠️' },
   { key: 'evidence', label: 'Evidence', icon: '🔗' },
+  { key: 'comments', label: 'Comments', icon: '💬' },
 ];
 
 export default function ReportViewerPage() {
@@ -29,6 +30,40 @@ export default function ReportViewerPage() {
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
   const [copySuccess, setCopySuccess] = useState(false);
   const [showPresentation, setShowPresentation] = useState(false);
+
+  // ── Phase 14: Comments ──────────────────────────────────────────────────
+  interface Comment { id: string; report_id: string; author_name: string; content: string; created_at: string; }
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentAuthor, setCommentAuthor] = useState('');
+  const [commentContent, setCommentContent] = useState('');
+  const [postingComment, setPostingComment] = useState(false);
+
+  useEffect(() => {
+    if (reportId) {
+      intelligenceApi.listComments(reportId).then((data) => {
+        if (data && Array.isArray(data)) setComments(data);
+      });
+    }
+  }, [reportId]);
+
+  const handlePostComment = async () => {
+    if (!commentContent.trim()) return;
+    setPostingComment(true);
+    const result = await intelligenceApi.postComment(reportId, {
+      author_name: commentAuthor || 'Anonymous Analyst',
+      content: commentContent,
+    });
+    if (result) {
+      setComments(prev => [result, ...prev]);
+      setCommentContent('');
+    }
+    setPostingComment(false);
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    const ok = await intelligenceApi.deleteComment(commentId);
+    if (ok) setComments(prev => prev.filter(c => c.id !== commentId));
+  };
 
   useEffect(() => {
     async function load() {
@@ -391,6 +426,92 @@ export default function ReportViewerPage() {
                   )}
                 </div>
               ))
+            )}
+          </div>
+        )}
+
+        {/* Comments Tab */}
+        {activeTab === 'comments' && (
+          <div>
+            {/* Post Comment Form */}
+            <div className="glass-panel" style={{ padding: '20px', marginBottom: '20px' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '14px' }}>💬 Add Annotation</h3>
+              <input
+                type="text"
+                placeholder="Your name (optional)"
+                value={commentAuthor}
+                onChange={e => setCommentAuthor(e.target.value)}
+                style={{
+                  width: '100%', marginBottom: '10px', padding: '10px 14px',
+                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '8px', color: '#f0f0f8', fontSize: '0.875rem', boxSizing: 'border-box'
+                }}
+              />
+              <textarea
+                placeholder="Write your annotation, insight, or note on this dossier..."
+                value={commentContent}
+                onChange={e => setCommentContent(e.target.value)}
+                rows={4}
+                style={{
+                  width: '100%', marginBottom: '12px', padding: '10px 14px',
+                  background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                  borderRadius: '8px', color: '#f0f0f8', fontSize: '0.875rem',
+                  resize: 'vertical', fontFamily: 'inherit', boxSizing: 'border-box'
+                }}
+              />
+              <button
+                className="btn-primary"
+                onClick={handlePostComment}
+                disabled={postingComment || !commentContent.trim()}
+                style={{ opacity: postingComment || !commentContent.trim() ? 0.6 : 1 }}
+              >
+                {postingComment ? '⏳ Posting...' : '📌 Post Annotation'}
+              </button>
+            </div>
+
+            {/* Comments List */}
+            {comments.length === 0 ? (
+              <div className="glass-panel" style={{ padding: '48px', textAlign: 'center' }}>
+                <p style={{ fontSize: '2rem', marginBottom: '8px' }}>💬</p>
+                <p style={{ fontWeight: '600', marginBottom: '6px' }}>No annotations yet</p>
+                <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>Be the first to annotate this dossier.</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {comments.map(c => (
+                  <div key={c.id} className="glass-panel" style={{ padding: '16px 20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{
+                          width: '28px', height: '28px', borderRadius: '50%', display: 'inline-flex',
+                          alignItems: 'center', justifyContent: 'center',
+                          background: 'rgba(124,58,237,0.2)', fontSize: '0.75rem', fontWeight: '700', color: '#a78bfa'
+                        }}>
+                          {(c.author_name || 'A').charAt(0).toUpperCase()}
+                        </span>
+                        <span style={{ fontWeight: '600', fontSize: '0.875rem' }}>{c.author_name}</span>
+                        <span style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
+                          {new Date(c.created_at).toLocaleString()}
+                        </span>
+                      </div>
+                      <button
+                        onClick={() => handleDeleteComment(c.id)}
+                        style={{
+                          background: 'none', border: 'none', cursor: 'pointer',
+                          color: 'var(--text-muted)', fontSize: '0.8rem', padding: '2px 6px',
+                          borderRadius: '4px', transition: 'all 0.15s'
+                        }}
+                        title="Delete annotation"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                    <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.6', margin: 0 }}>
+                      {c.content}
+                    </p>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}

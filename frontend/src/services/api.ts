@@ -469,8 +469,60 @@ export const intelligenceApi = {
       console.warn('Failed to delete prompt template:', error);
       return false;
     }
-  }
+  },
+
+  // ─── Phase 14: Comments & Activity Feed ───────────────────────────────────
+
+  async listComments(reportId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/comments/reports/${reportId}`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list comments:', error);
+      return [];
+    }
+  },
+
+  async postComment(reportId: string, payload: { author_name?: string; content: string }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/comments/reports/${reportId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to post comment:', error);
+      return null;
+    }
+  },
+
+  async deleteComment(commentId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/comments/${commentId}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete comment:', error);
+      return false;
+    }
+  },
+
+  async getActivityFeed(limit = 50) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/comments/activity/feed?limit=${limit}`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch activity feed:', error);
+      return [];
+    }
+  },
 };
+
 
 
 // Client-side fallback simulator helpers

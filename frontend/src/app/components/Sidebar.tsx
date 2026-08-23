@@ -20,12 +20,15 @@ const mainNav: NavItem[] = [
   { label: 'Monitoring', href: '/monitoring', icon: '📡' },
   { label: 'Analytics', href: '/analytics', icon: '📈' },
   { label: 'Prompt Studio', href: '/prompts', icon: '🤖' },
+  { label: 'Activity Feed', href: '/activity', icon: '📣' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
 
 const settingsNav: NavItem[] = [
+  { label: 'Integrations', href: '/integrations', icon: '🔗' },
   { label: 'Settings', href: '/settings', icon: '⚙️' },
 ];
+
 
 export default function Sidebar() {
   const pathname = usePathname();

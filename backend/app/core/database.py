@@ -51,6 +51,6 @@ def get_db():
 
 def init_db():
     """Create all tables in the database."""
-    from app.models import intelligence, monitoring, user, webhook, prompt_template  # noqa: F401
+    from app.models import intelligence, monitoring, user, webhook, prompt_template, comment, activity  # noqa: F401
     Base.metadata.create_all(bind=engine)
 
