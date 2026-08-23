@@ -22,7 +22,7 @@ For every change / commit, we document:
 
 ### [2026-08-23] Phase 20: AI Strategic Scenario Simulator & Sensitivity Matrix Engine
 - **Status:** Completed ✅
-- **Commit:** `TBD — pending push`
+- **Commit:** `1cf8937`
 - **Components:** Backend (`app/api/v1/endpoints/simulator.py`), Frontend (`reports/[id]/simulate/page.tsx`, `reports/[id]/page.tsx`, `api.ts`)
 - **Summary of Work:**
   - Built `POST /api/v1/research/reports/{id}/simulate` — dynamic What-If market stress testing engine recalculating TAM, SAM, SOM, CAGR, market share delta, Resilience Grade (A+ to F), and recalibrated risk matrix.
