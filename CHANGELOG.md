@@ -20,6 +20,21 @@ For every change / commit, we document:
 
 ---
 
+### [2026-08-23] Phase 18: Executive Strategy Deck Generator & Presentation Exporter
+- **Status:** Completed ✅
+- **Commit:** `TBD — pending push`
+- **Components:** Backend (`app/api/v1/endpoints/deck.py`), Frontend (`reports/[id]/deck/page.tsx`, `reports/[id]/page.tsx`, `api.ts`)
+- **Summary of Work:**
+  - Built `GET /api/v1/research/reports/{id}/deck` — transforms market intelligence reports into 6-slide boardroom presentation deck schemas with speaker notes.
+  - Built `/reports/[id]/deck` presentation runner: slide stage, thumbnail sidebar, keyboard controls (←/→, Space, `F`, `N`), speaker notes drawer, and Light/Dark theme toggle.
+  - Added One-Click **Export Standalone HTML Deck** action: generates single offline `.html` file with embedded CSS presentation runner for boardroom meetings.
+  - Added `📽️ Present Deck` button to Dossier action bar on `/reports/[id]`.
+  - ESLint clean (0 errors).
+
+---
+
+
+
 ### [2026-08-23] Phase 17: Interactive Intelligence Graph & Entity Relationship Map
 - **Status:** Completed ✅
 - **Commit:** `48cc2ef`

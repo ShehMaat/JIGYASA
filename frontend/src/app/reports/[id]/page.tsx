@@ -128,6 +128,11 @@ export default function ReportViewerPage() {
           <p>{new Date(report.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <Link href={`/reports/${report.id}/deck`} style={{ textDecoration: 'none' }}>
+            <button className="btn-primary" style={{ background: 'linear-gradient(135deg, #7c3aed, #6d28d9)' }}>
+              📽️ Present Deck
+            </button>
+          </Link>
           <button className="btn-primary" onClick={() => setShowPresentation(true)}>
             📺 Presentation Mode
           </button>

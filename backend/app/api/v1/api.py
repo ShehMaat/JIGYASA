@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import research, projects, knowledge, monitoring, auth, notifications, comments, schedules, search, graph
+from app.api.v1.endpoints import research, projects, knowledge, monitoring, auth, notifications, comments, schedules, search, graph, deck
 
 api_router = APIRouter()
 api_router.include_router(auth.router)
@@ -12,4 +12,6 @@ api_router.include_router(comments.router)
 api_router.include_router(schedules.router)
 api_router.include_router(search.router)
 api_router.include_router(graph.router)
+api_router.include_router(deck.router)
+
 

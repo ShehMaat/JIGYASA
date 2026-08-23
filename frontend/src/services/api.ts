@@ -620,6 +620,19 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 18: Presentation Deck Generator ────────────────────────────────
+
+  async getReportDeck(reportId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}/deck`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch report deck:', error);
+      return null;
+    }
+  },
 };
 
 
