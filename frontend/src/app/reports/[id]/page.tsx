@@ -134,6 +134,11 @@ export default function ReportViewerPage() {
               📽️ Present Deck
             </button>
           </Link>
+          <Link href={`/reports/${report.id}/simulate`} style={{ textDecoration: 'none' }}>
+            <button className="btn-primary" style={{ background: 'linear-gradient(135deg, #0891b2, #0284c7)' }}>
+              ⚡ Strategic Simulator
+            </button>
+          </Link>
           <button className="btn-primary" onClick={() => setShowPresentation(true)}>
             📺 Presentation Mode
           </button>

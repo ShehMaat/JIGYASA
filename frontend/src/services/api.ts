@@ -646,6 +646,28 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 20: Scenario Simulator ─────────────────────────────────────────
+
+  async runScenarioSimulation(reportId: string, payload: {
+    price_adjustment_pct: number;
+    market_growth_delta_pct: number;
+    competitor_aggression: string;
+    r_and_d_investment_boost: number;
+  }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}/simulate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Scenario simulation failed:', error);
+      return null;
+    }
+  },
 };
 
 

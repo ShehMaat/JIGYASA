@@ -20,6 +20,21 @@ For every change / commit, we document:
 
 ---
 
+### [2026-08-23] Phase 20: AI Strategic Scenario Simulator & Sensitivity Matrix Engine
+- **Status:** Completed ✅
+- **Commit:** `TBD — pending push`
+- **Components:** Backend (`app/api/v1/endpoints/simulator.py`), Frontend (`reports/[id]/simulate/page.tsx`, `reports/[id]/page.tsx`, `api.ts`)
+- **Summary of Work:**
+  - Built `POST /api/v1/research/reports/{id}/simulate` — dynamic What-If market stress testing engine recalculating TAM, SAM, SOM, CAGR, market share delta, Resilience Grade (A+ to F), and recalibrated risk matrix.
+  - Created `/reports/[id]/simulate` dashboard: interactive range sliders (Price adjustment, Market Growth Delta, R&D Boost) & competitor aggression toggle chips (`Low`, `Moderate`, `Aggressive`, `Hostile`).
+  - Added Baseline vs Simulated metrics comparison grid, Resilience Grade Gauge box, and real-time recalibrated strategic action items.
+  - Added `⚡ Strategic Simulator` button to Dossier action bar on `/reports/[id]`.
+  - ESLint clean (0 errors).
+
+---
+
+
+
 ### [2026-08-23] Phase 19: AI Executive Briefing Podcaster & Audio Synthesis Engine
 - **Status:** Completed ✅
 - **Commit:** `c9f89b1`
