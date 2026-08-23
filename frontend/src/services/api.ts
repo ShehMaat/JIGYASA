@@ -633,6 +633,19 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 19: AI Podcast Briefing ────────────────────────────────────────
+
+  async getReportPodcast(reportId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}/podcast`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch report podcast:', error);
+      return null;
+    }
+  },
 };
 
 

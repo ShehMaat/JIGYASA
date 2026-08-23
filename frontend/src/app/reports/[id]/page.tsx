@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { intelligenceApi } from '../../../services/api';
 import { MarketReport } from '../../../types/intelligence';
 import PresentationModal from '../../components/PresentationModal';
+import AudioBriefingPlayer from '../../components/AudioBriefingPlayer';
 
 type TabKey = 'overview' | 'competitors' | 'matrix' | 'swot' | 'strategy' | 'risks' | 'evidence' | 'comments';
 
@@ -154,6 +155,9 @@ export default function ReportViewerPage() {
           <button className="btn-secondary" onClick={() => window.print()}>🖨️ Print PDF</button>
         </div>
       </div>
+
+      {/* Audio Podcast Briefing Player */}
+      <AudioBriefingPlayer reportId={report.id} />
 
       {/* Tab Navigation */}
       <div className="tab-nav animate-in animate-in-delay-1" style={{ marginBottom: '24px' }}>
