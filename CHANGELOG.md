@@ -22,7 +22,7 @@ For every change / commit, we document:
 
 ### [2026-08-23] Phase 17: Interactive Intelligence Graph & Entity Relationship Map
 - **Status:** Completed ✅
-- **Commit:** `TBD — pending push`
+- **Commit:** `48cc2ef`
 - **Components:** Backend (`app/api/v1/endpoints/graph.py`), Frontend (`graph/page.tsx`, `Sidebar.tsx`, `api.ts`)
 - **Summary of Work:**
   - Built `GET /api/v1/graph/nodes` — dynamic topology engine compiling companies, industries, dossiers, projects, and scheduled jobs with directed relationship links.
