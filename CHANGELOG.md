@@ -18,6 +18,17 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 9: Production Dockerization, GitHub Actions CI/CD Pipeline & OpenAPI Developer Portal
+- **Status:** Completed & Verified
+- **Components:** Containers (`backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml`), CI/CD (`.github/workflows/ci.yml`), Frontend (`src/app/settings/page.tsx`, `next.config.ts`), Backend (`requirements.txt`)
+- **Summary of Work:**
+  - **Multi-Stage Production Docker Containers**: Created lightweight multi-stage Python 3.11 `Dockerfile` in `backend/`, standalone Next.js 16 `Dockerfile` in `frontend/` (`output: "standalone"` in `next.config.ts`), and updated `docker-compose.yml` to orchestrate FastAPI backend (`:8000`), Next.js SaaS UI (`:3000`), PostgreSQL with `pgvector` (`:5432`), and Redis (`:6379`).
+  - **Automated GitHub Actions CI/CD Pipeline**: Built `.github/workflows/ci.yml` running automated backend Python compilation checks and frontend Next.js production compilation (`npm run build`) & ESLint validation (`npm run lint`) on every push to `main`.
+  - **Embedded OpenAPI Developer Portal (`/settings`)**: Updated `settings/page.tsx` with an interactive OpenAPI Swagger UI developer portal tab, allowing live API testing directly within the web application.
+  - **Verification**: Verified clean Next.js static build (`npm.cmd run build` — 12 routes compiled in standalone mode), 0 ESLint warnings (`npm.cmd run lint`), and 0 Python syntax errors across all backend modules.
+
+---
+
 ### [2026-08-23] Phase 8: User Authentication, Role-Based Access Control & JWT Security
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/models/user.py`, `app/core/security.py`, `app/api/v1/endpoints/auth.py`, `app/core/database.py`, `app/api/v1/api.py`), Frontend (`src/context/AuthContext.tsx`, `src/app/login/page.tsx`, `src/app/layout.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`)
