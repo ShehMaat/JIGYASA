@@ -369,6 +369,17 @@ export const intelligenceApi = {
       console.warn('Failed to fetch authenticated user profile:', error);
       return null;
     }
+  },
+
+  async getAnalyticsSummary() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/analytics/summary`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch analytics summary:', error);
+      return null;
+    }
   }
 };
 

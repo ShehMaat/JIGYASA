@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import { intelligenceApi } from '../../../services/api';
 import { MarketReport } from '../../../types/intelligence';
+import PresentationModal from '../../components/PresentationModal';
 
 type TabKey = 'overview' | 'competitors' | 'matrix' | 'swot' | 'strategy' | 'risks' | 'evidence';
 
@@ -27,6 +28,7 @@ export default function ReportViewerPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
   const [copySuccess, setCopySuccess] = useState(false);
+  const [showPresentation, setShowPresentation] = useState(false);
 
   useEffect(() => {
     async function load() {
@@ -91,6 +93,9 @@ export default function ReportViewerPage() {
           <p>{new Date(report.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
         </div>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button className="btn-primary" onClick={() => setShowPresentation(true)}>
+            📺 Presentation Mode
+          </button>
           <button className="btn-secondary" onClick={handleCopy}>
             {copySuccess ? '✅ Copied!' : '📋 Copy Summary'}
           </button>
@@ -390,6 +395,10 @@ export default function ReportViewerPage() {
           </div>
         )}
       </div>
+
+      {showPresentation && report && (
+        <PresentationModal report={report} onClose={() => setShowPresentation(false)} />
+      )}
     </div>
   );
 }

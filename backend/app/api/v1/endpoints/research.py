@@ -339,3 +339,69 @@ def get_report_summary(report_id: str, db: Session = Depends(get_db)):
         "created_at": report.created_at
     }
 
+
+@router.get("/analytics/summary", summary="Get Cross-Dossier Macro Analytics Summary")
+def get_analytics_summary(db: Session = Depends(get_db)):
+    """
+    Computes cross-dossier macro analytics metrics across all generated market dossiers.
+    """
+    reports = db.query(MarketReport).all()
+
+    total_reports = len(reports)
+    total_competitors = 0
+    total_evidence = 0
+    high_priority_recs = 0
+    med_priority_recs = 0
+    low_priority_recs = 0
+
+    strengths_total = 0
+    weaknesses_total = 0
+    opportunities_total = 0
+    threats_total = 0
+
+    competitor_positions: Dict[str, int] = {}
+    industry_counts: Dict[str, int] = {}
+
+    for r in reports:
+        comps = r.competitor_analysis or []
+        total_competitors += len(comps)
+        for c in comps:
+            pos = c.get("market_position", "Uncategorized")
+            competitor_positions[pos] = competitor_positions.get(pos, 0) + 1
+
+        recs = r.strategic_recommendations or []
+        for rec in recs:
+            prio = rec.get("priority", "Medium")
+            if prio == "High":
+                high_priority_recs += 1
+            elif prio == "Low":
+                low_priority_recs += 1
+            else:
+                med_priority_recs += 1
+
+        swot = r.swot_analysis or {}
+        strengths_total += len(swot.get("strengths", []))
+        weaknesses_total += len(swot.get("weaknesses", []))
+        opportunities_total += len(swot.get("opportunities", []))
+        threats_total += len(swot.get("threats", []))
+
+        total_evidence += len(r.raw_evidence or [])
+
+    return {
+        "total_reports": total_reports,
+        "total_competitors": total_competitors,
+        "total_evidence_citations": total_evidence,
+        "recommendations_breakdown": {
+            "high_priority": high_priority_recs,
+            "medium_priority": med_priority_recs,
+            "low_priority": low_priority_recs,
+        },
+        "swot_breakdown": {
+            "strengths": strengths_total,
+            "weaknesses": weaknesses_total,
+            "opportunities": opportunities_total,
+            "threats": threats_total,
+        },
+        "competitor_positions": competitor_positions,
+    }
+

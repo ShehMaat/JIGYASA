@@ -18,6 +18,7 @@ const mainNav: NavItem[] = [
   { label: 'Compare Matrix', href: '/compare', icon: '📐' },
   { label: 'Knowledge RAG', href: '/knowledge', icon: '🧠' },
   { label: 'Monitoring', href: '/monitoring', icon: '📡' },
+  { label: 'Analytics', href: '/analytics', icon: '📈' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
 

@@ -18,6 +18,18 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 10: Enterprise Macro Analytics Dashboard, Executive Presentation Mode & Final Polish
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/api/v1/endpoints/research.py`), Frontend (`src/app/analytics/page.tsx`, `src/app/components/PresentationModal.tsx`, `src/app/reports/[id]/page.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`), Documentation (`README.md`)
+- **Summary of Work:**
+  - **Macro Analytics API (`GET /api/v1/research/analytics/summary`)**: Created backend aggregator computing cross-dossier metrics (Total Dossiers, Tracked Competitors, Evidence Citations Count, SWOT Distribution Ratios, and Strategic Initiative Priority Breakdown).
+  - **Enterprise Analytics Dashboard (`/analytics`)**: Built responsive dashboard page in `analytics/page.tsx` displaying KPI cards, competitor market position footprint distribution, and strategic priority progress bars. Added Analytics link to `Sidebar.tsx`.
+  - **Executive Presentation Mode (`PresentationModal.tsx`)**: Created fullscreen keyboard-navigated pitch slide deck (`ArrowLeft`/`ArrowRight` navigation across 6 slides: Overview, Sizing, Competitor Matrix, SWOT, Roadmap, and Risks). Mounted modal in `reports/[id]/page.tsx`.
+  - **Documentation Overhaul (`README.md`)**: Comprehensive update documenting all 10 platform phases, system architecture diagram, Docker Compose quickstart, local development guide, and ESLint/TypeScript verification.
+  - **Verification**: Verified clean Next.js static build (`npm.cmd run build` — 13 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), and 0 Python syntax errors across all backend modules.
+
+---
+
 ### [2026-08-23] Phase 9: Production Dockerization, GitHub Actions CI/CD Pipeline & OpenAPI Developer Portal
 - **Status:** Completed & Verified
 - **Components:** Containers (`backend/Dockerfile`, `frontend/Dockerfile`, `docker-compose.yml`), CI/CD (`.github/workflows/ci.yml`), Frontend (`src/app/settings/page.tsx`, `next.config.ts`), Backend (`requirements.txt`)
