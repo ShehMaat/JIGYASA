@@ -22,7 +22,7 @@ For every change / commit, we document:
 
 ### [2026-08-23] Phase 18: Executive Strategy Deck Generator & Presentation Exporter
 - **Status:** Completed ✅
-- **Commit:** `TBD — pending push`
+- **Commit:** `5c649a5`
 - **Components:** Backend (`app/api/v1/endpoints/deck.py`), Frontend (`reports/[id]/deck/page.tsx`, `reports/[id]/page.tsx`, `api.ts`)
 - **Summary of Work:**
   - Built `GET /api/v1/research/reports/{id}/deck` — transforms market intelligence reports into 6-slide boardroom presentation deck schemas with speaker notes.
