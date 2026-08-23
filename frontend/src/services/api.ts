@@ -668,6 +668,56 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 21: Firebase & Stitch Cloud Integration ───────────────────────
+
+  async getFirebaseStatus() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/firebase/status`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch Firebase status:', error);
+      return null;
+    }
+  },
+
+  async triggerFirebaseSync() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/firebase/sync`, { method: 'POST' });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to trigger Firebase sync:', error);
+      return null;
+    }
+  },
+
+  async getStitchDesignSystem() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/stitch/design-system`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch Stitch design system:', error);
+      return null;
+    }
+  },
+
+  async generateStitchScreen(prompt: string, deviceType = 'DESKTOP') {
+    try {
+      const response = await fetch(`${API_BASE_URL}/stitch/screens/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, device_type: deviceType }),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to generate Stitch screen:', error);
+      return null;
+    }
+  },
 };
 
 

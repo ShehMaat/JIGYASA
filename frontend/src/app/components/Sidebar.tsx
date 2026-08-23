@@ -22,6 +22,7 @@ const mainNav: NavItem[] = [
   { label: 'Prompt Studio', href: '/prompts', icon: '🤖' },
   { label: 'Scheduled Research', href: '/scheduled', icon: '⏰' },
   { label: 'Intelligence Graph', href: '/graph', icon: '🌐' },
+  { label: 'Cloud & Design Hub', href: '/cloud-hub', icon: '☁️' },
   { label: 'Activity Feed', href: '/activity', icon: '📣' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
