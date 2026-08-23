@@ -149,7 +149,7 @@ class RAGKnowledgeService:
         client = get_llm_client()
         if client and (settings.GROQ_API_KEY or settings.OPENAI_API_KEY):
             prompt = f"""
-You are Alkame's Strategic RAG Analyst.
+You are JIGYASA's Strategic RAG Analyst.
 Answer the user's question directly and concisely based ONLY on the provided evidence chunks:
 
 USER QUESTION:

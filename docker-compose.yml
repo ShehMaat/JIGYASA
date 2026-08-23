@@ -8,8 +8,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - APP_NAME=Alkame Intelligence Platform
-      - DATABASE_URL=postgresql://alkame_user:alkame_password@db:5432/alkame_db
+      - APP_NAME=JIGYASA Intelligence Platform
+      - DATABASE_URL=postgresql://jigyasa_user:jigyasa_password@db:5432/jigyasa_db
       - REDIS_URL=redis://redis:6379/0
       - FRONTEND_URL=http://localhost:3000
     depends_on:
@@ -34,9 +34,9 @@ services:
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: alkame_user
-      POSTGRES_PASSWORD: alkame_password
-      POSTGRES_DB: alkame_db
+      POSTGRES_USER: jigyasa_user
+      POSTGRES_PASSWORD: jigyasa_password
+      POSTGRES_DB: jigyasa_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped

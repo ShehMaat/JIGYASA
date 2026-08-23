@@ -74,9 +74,9 @@ export default function Sidebar() {
       <aside className={`sidebar ${mobileOpen ? 'open' : ''}`}>
         {/* Brand */}
         <div className="sidebar-brand">
-          <div className="sidebar-logo">A</div>
+          <div className="sidebar-logo">J</div>
           <div className="sidebar-brand-text">
-            <h2>Alkame</h2>
+            <h2>JIGYASA</h2>
             <p>Market Intelligence</p>
           </div>
         </div>

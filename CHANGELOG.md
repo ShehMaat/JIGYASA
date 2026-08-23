@@ -1,6 +1,6 @@
-# Alkame AI Market Intelligence Platform — Project Changelog & Commitments
+# JIGYASA AI Market Intelligence Platform — Project Changelog & Commitments
 
-This document tracks all project milestones, architectural decisions, and commits for the Alkame AI platform. Every task and code commitment is recorded here with its scope, details, and rationale.
+This document tracks all project milestones, architectural decisions, and commits for the JIGYASA AI platform. Every task and code commitment is recorded here with its scope, details, and rationale.
 
 ---
 

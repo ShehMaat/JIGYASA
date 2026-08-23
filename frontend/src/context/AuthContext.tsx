@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     async function restoreSession() {
-      const savedToken = localStorage.getItem('alkame_jwt_token');
+      const savedToken = localStorage.getItem('jigyasa_jwt_token');
       if (savedToken) {
         setToken(savedToken);
         try {
@@ -44,16 +44,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (userData) {
             setUser(userData);
           } else {
-            localStorage.removeItem('alkame_jwt_token');
+            localStorage.removeItem('jigyasa_jwt_token');
             setToken(null);
           }
         } catch {
-          localStorage.removeItem('alkame_jwt_token');
+          localStorage.removeItem('jigyasa_jwt_token');
           setToken(null);
         }
       }
       setIsLoading(false);
     }
+
     restoreSession();
   }, []);
 
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res && res.access_token) {
         setToken(res.access_token);
         setUser(res.user);
-        localStorage.setItem('alkame_jwt_token', res.access_token);
+        localStorage.setItem('jigyasa_jwt_token', res.access_token);
         return true;
       }
       return false;
@@ -78,7 +79,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (res && res.access_token) {
         setToken(res.access_token);
         setUser(res.user);
-        localStorage.setItem('alkame_jwt_token', res.access_token);
+        localStorage.setItem('jigyasa_jwt_token', res.access_token);
         return true;
       }
       return false;
@@ -90,7 +91,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = () => {
     setUser(null);
     setToken(null);
-    localStorage.removeItem('alkame_jwt_token');
+    localStorage.removeItem('jigyasa_jwt_token');
   };
 
   return (

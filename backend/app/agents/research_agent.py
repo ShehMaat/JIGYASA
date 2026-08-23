@@ -169,7 +169,7 @@ class MarketResearchAgent:
                 truncated_signals[k] = v
 
         prompt = f"""
-You are Alkame's Principal Market Intelligence and Competitive Strategy AI Agent.
+You are JIGYASA's Principal Market Intelligence and Competitive Strategy AI Agent.
 Analyze the target company '{self.company_name}' in the '{self.industry}' industry based on the following real-time web research:
 
 LIVE SEARCH SIGNALS:

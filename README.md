@@ -1,6 +1,6 @@
-# ⚡ Alkame AI — Enterprise Market Intelligence Platform
+# ⚡ JIGYASA AI — Enterprise Market Intelligence Platform
 
-Alkame AI is an autonomous, multi-agent market intelligence platform designed to conduct live web search research, analyze competitive landscapes, ingest external document knowledge bases (PDF/TXT/MD), and synthesize presentation-ready strategic dossiers.
+JIGYASA AI is an autonomous, multi-agent market intelligence platform designed to conduct live web search research, analyze competitive landscapes, ingest external document knowledge bases (PDF/TXT/MD), and synthesize presentation-ready strategic dossiers.
 
 ---
 
@@ -44,13 +44,13 @@ Alkame AI is an autonomous, multi-agent market intelligence platform designed to
 
 ```
                        ┌──────────────────────────────────────────────┐
-                       │  Alkame SaaS Frontend (Next.js 16 App Router)│
+                       │  JIGYASA SaaS Frontend (Next.js 16 App Router)│
                        │  13 Pages + Cmd+K + AuthContext + SSE Stream │
                        └──────────────────────┬───────────────────────┘
                                               │ REST / SSE (Port 8000)
                                               ▼
                        ┌──────────────────────────────────────────────┐
-                       │   Alkame Python Backend Engine (FastAPI)     │
+                       │   JIGYASA Python Backend Engine (FastAPI)    │
                        │   Multi-Agent LLM + RAG + Crawler + Auth     │
                        └──────┬──────────────────────┬────────────────┘
                               │                      │

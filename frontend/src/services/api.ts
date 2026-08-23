@@ -355,7 +355,7 @@ export const intelligenceApi = {
 
   async getMe(token?: string) {
     try {
-      const jwtToken = token || localStorage.getItem('alkame_jwt_token');
+      const jwtToken = token || localStorage.getItem('jigyasa_jwt_token');
       if (!jwtToken) return null;
 
       const response = await fetch(`${API_BASE_URL}/auth/me`, {

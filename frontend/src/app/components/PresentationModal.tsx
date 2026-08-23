@@ -52,7 +52,7 @@ export default function PresentationModal({ report, onClose }: PresentationModal
       {/* Top Slide Header Bar */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-          <span style={{ fontSize: '1.2rem', color: 'var(--primary-accent)', fontWeight: '800' }}>Alkame Intelligence</span>
+          <span style={{ fontSize: '1.2rem', color: 'var(--primary-accent)', fontWeight: '800' }}>JIGYASA Intelligence</span>
           <span style={{ fontSize: '0.82rem', color: 'var(--text-subtle)' }}>| Executive Presentation</span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>

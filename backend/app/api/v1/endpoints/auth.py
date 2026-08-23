@@ -13,13 +13,13 @@ router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
 class UserRegisterRequest(BaseModel):
-    email: str = Field(..., example="analyst@alkame.ai")
+    email: str = Field(..., example="analyst@jigyasa.ai")
     password: str = Field(..., min_length=6, example="password123")
     full_name: Optional[str] = Field(default=None, example="Alex Analyst")
 
 
 class UserLoginRequest(BaseModel):
-    email: str = Field(..., example="analyst@alkame.ai")
+    email: str = Field(..., example="analyst@jigyasa.ai")
     password: str = Field(..., example="password123")
 
 

@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 # Initialize FastAPI App
 app = FastAPI(
     title=settings.APP_NAME,
-    description="Alkame AI Market Intelligence Platform API with Autonomous Agents & Real-time Insights",
+    description="JIGYASA AI Market Intelligence Platform API with Autonomous Agents & Real-time Insights",
     version=settings.APP_VERSION,
     docs_url="/docs",
     redoc_url="/redoc"
@@ -62,4 +62,4 @@ def read_root():
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "service": "alkame-backend"}
+    return {"status": "healthy", "service": "jigyasa-backend"}

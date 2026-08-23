@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     """Application configuration loaded from environment variables."""
 
     # Application
-    APP_NAME: str = "Alkame AI Platform"
+    APP_NAME: str = "JIGYASA AI Platform"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
 
@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     LLM_TIMEOUT_SECONDS: int = 60
 
     # Database
-    DATABASE_URL: str = "postgresql://alkame_user:alkame_password@localhost:5432/alkame_db"
+    DATABASE_URL: str = "postgresql://jigyasa_user:jigyasa_password@localhost:5432/jigyasa_db"
 
     # Redis
     REDIS_URL: str = "redis://localhost:6379/0"
@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     FRONTEND_URL: str = "http://localhost:3000"
 
     # Security
-    SECRET_KEY: str = "alkame-dev-secret-key-change-in-production"
+    SECRET_KEY: str = "jigyasa-dev-secret-key-change-in-production"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24  # 24 hours
 
     model_config = {

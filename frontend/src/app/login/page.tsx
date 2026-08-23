@@ -74,9 +74,9 @@ export default function LoginPage() {
               margin: '0 auto 12px',
             }}
           >
-            A
+            J
           </div>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: '700' }}>Alkame Intelligence</h2>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: '700' }}>JIGYASA Intelligence</h2>
           <p style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '4px' }}>
             Enterprise AI Market Intelligence Portal
           </p>
@@ -178,7 +178,7 @@ export default function LoginPage() {
               className="input-field"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="analyst@alkame.ai"
+              placeholder="analyst@jigyasa.ai"
               required
             />
           </div>

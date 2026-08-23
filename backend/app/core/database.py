@@ -25,12 +25,12 @@ def _get_working_engine():
         except Exception as e:
             logger.warning(
                 f"PostgreSQL connection to {settings.DATABASE_URL} failed ({e}). "
-                "Falling back to local SQLite database (alkame_dev.db)."
+                "Falling back to local SQLite database (jigyasa_dev.db)."
             )
 
     # Fallback to local SQLite engine
     sqlite_engine = create_engine(
-        "sqlite:///./alkame_dev.db",
+        "sqlite:///./jigyasa_dev.db",
         connect_args={"check_same_thread": False},
     )
     return sqlite_engine

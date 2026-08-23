@@ -111,7 +111,7 @@ export default function SettingsPage() {
         <div className="glass-panel animate-in" style={{ height: '700px', overflow: 'hidden', padding: '0' }}>
           <iframe
             src={docsUrl}
-            title="Alkame OpenAPI Swagger Documentation"
+            title="JIGYASA OpenAPI Swagger Documentation"
             style={{ width: '100%', height: '100%', border: 'none', background: '#fff' }}
           />
         </div>

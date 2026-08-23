@@ -5,7 +5,7 @@ import CommandPalette from "./components/CommandPalette";
 import { AuthProvider } from "../context/AuthContext";
 
 export const metadata: Metadata = {
-  title: "Alkame Intelligence — AI Market Research & Competitor Analysis Platform",
+  title: "JIGYASA Intelligence — AI Market Research & Competitor Analysis Platform",
   description: "Autonomous AI-powered market intelligence platform delivering real-time competitor analysis, SWOT matrices, and strategic insights via Groq LLM + live web crawling.",
   keywords: "market intelligence, competitor analysis, AI, SWOT, business strategy, Groq, LLM",
 };

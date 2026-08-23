@@ -1,4 +1,4 @@
-# Multi-stage Python 3.11 Dockerfile for Alkame Backend
+# Multi-stage Python 3.11 Dockerfile for JIGYASA Backend
 FROM python:3.11-slim as builder
 
 WORKDIR /app
