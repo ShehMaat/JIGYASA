@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.v1.endpoints import research, projects, knowledge, monitoring, auth, notifications, comments, schedules, search, graph, deck, podcast, simulator, firebase_endpoints, stitch
+from app.api.v1.endpoints import research, projects, knowledge, monitoring, auth, notifications, comments, schedules, search, graph, deck, podcast, simulator, firebase_endpoints, stitch, system
 
 api_router = APIRouter()
 api_router.include_router(auth.router)
@@ -17,6 +17,8 @@ api_router.include_router(podcast.router)
 api_router.include_router(simulator.router)
 api_router.include_router(firebase_endpoints.router)
 api_router.include_router(stitch.router)
+api_router.include_router(system.router)
+
 
 
 

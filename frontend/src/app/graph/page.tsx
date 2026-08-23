@@ -290,7 +290,7 @@ export default function IntelligenceGraphPage() {
   // ── Canvas Interaction Handlers ──────────────────────────────────────────
   const getCanvasPos = (e: React.MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
-    if (!canvas) return { x: 0, y: 0 };
+    if (!canvas) return { worldX: 0, worldY: 0, rawX: 0, rawY: 0 };
     const rect = canvas.getBoundingClientRect();
     const rawX = e.clientX - rect.left;
     const rawY = e.clientY - rect.top;
@@ -478,9 +478,9 @@ export default function IntelligenceGraphPage() {
             </div>
 
             {/* Deep link if meta url exists */}
-            {selectedNode.meta?.url && (
+            {Boolean(selectedNode.meta?.url && typeof selectedNode.meta.url === 'string') && (
               <div className="drawer-actions">
-                <Link href={selectedNode.meta.url as string} className="btn-open-entity">
+                <Link href={String(selectedNode.meta?.url)} className="btn-open-entity">
                   Open {TYPE_META[selectedNode.type]?.label || 'Entity'} →
                 </Link>
               </div>

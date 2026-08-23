@@ -20,7 +20,7 @@ interface SlideElement {
 }
 
 interface Slide {
-  slide_number: int;
+  slide_number: number;
   title: string;
   subtitle?: string;
   layout: 'title' | 'bullets' | 'metrics' | 'table' | 'swot' | 'roadmap';

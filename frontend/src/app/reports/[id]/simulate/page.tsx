@@ -17,7 +17,7 @@ interface SimulationResult {
   sensitivity_index: number;
   resilience_score: string;
   recalibrated_recommendations: string[];
-  impact_summary: str;
+  impact_summary: string;
 }
 
 export default function ScenarioSimulatorPage({ params }: { params: Promise<{ id: string }> }) {

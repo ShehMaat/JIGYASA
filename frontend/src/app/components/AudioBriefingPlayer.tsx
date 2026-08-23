@@ -8,8 +8,8 @@ interface DialogueLine {
   role: string;
   text: string;
   timestamp: string;
-  pitch: float;
-  rate: float;
+  pitch: number;
+  rate: number;
 }
 
 interface PodcastData {

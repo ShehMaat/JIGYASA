@@ -107,3 +107,28 @@ async def test_webhook(webhook_id: str, db: Session = Depends(get_db)):
             "endpoint_url": sub.url,
             "signature": f"sha256={signature}"
         }
+
+
+# ─── SSE Real-Time Notification Stream ────────────────────────────────────────
+
+from fastapi.responses import StreamingResponse
+import asyncio
+
+@router.get("/stream", summary="Real-Time Server-Sent Events (SSE) Notification Stream")
+async def stream_notifications():
+    """
+    Establishes an SSE event stream connection pushing real-time activity updates.
+    """
+    async def event_generator():
+        yield f"data: {json.dumps({'event': 'connected', 'timestamp': datetime.utcnow().isoformat()})}\n\n"
+        while True:
+            await asyncio.sleep(15)
+            ping_data = {
+                "event": "heartbeat",
+                "timestamp": datetime.utcnow().isoformat(),
+                "unread_count": 0,
+            }
+            yield f"data: {json.dumps(ping_data)}\n\n"
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { intelligenceApi } from '../../services/api';
 
 interface ActivityEvent {
@@ -40,6 +40,7 @@ function timeAgo(isoDate: string): string {
 const STORAGE_KEY = 'jigyasa_notif_last_read';
 
 export default function NotificationBell() {
+  const drawerRef = useRef<HTMLDivElement>(null);
   const [events, setEvents] = useState<ActivityEvent[]>([]);
   const [open, setOpen] = useState(false);
   const [lastRead, setLastRead] = useState<number>(() => {
@@ -50,7 +51,7 @@ export default function NotificationBell() {
     return 0;
   });
 
-  // Fetch events on mount + every 30s
+  // Fetch events on mount + every 30s + listen on SSE stream
   useEffect(() => {
     const fetchEvents = () => {
       intelligenceApi.getActivityFeed(20).then(data => {
@@ -59,7 +60,24 @@ export default function NotificationBell() {
     };
     fetchEvents();
     const interval = setInterval(fetchEvents, 30000);
-    return () => clearInterval(interval);
+
+    // EventSource SSE Connection
+    let es: EventSource | null = null;
+    if (typeof window !== 'undefined' && 'EventSource' in window) {
+      try {
+        es = new EventSource('http://127.0.0.1:8000/api/v1/notifications/stream');
+        es.onmessage = () => {
+          fetchEvents();
+        };
+      } catch (err) {
+        console.warn('SSE notification stream unavailable:', err);
+      }
+    }
+
+    return () => {
+      clearInterval(interval);
+      if (es) es.close();
+    };
   }, []);
 
   // Close drawer on outside click

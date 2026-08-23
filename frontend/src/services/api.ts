@@ -718,6 +718,19 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 23: System Health & Telemetry ──────────────────────────────────
+
+  async getSystemHealth() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/system/health`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch system health:', error);
+      return null;
+    }
+  },
 };
 
 
