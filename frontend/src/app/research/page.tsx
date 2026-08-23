@@ -50,6 +50,47 @@ export default function ResearchPage() {
       return;
     }
 
+    // Use Server-Sent Events (SSE) for real-time live streaming log events
+    const sseUrl = `${process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1'}/research/tasks/${currentTask.id}/stream`;
+    const eventSource = new EventSource(sseUrl);
+
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.log) {
+          setCurrentTask((prev) => {
+            if (!prev) return prev;
+            const logs = prev.logs || [];
+            if (!logs.includes(data.log)) {
+              return {
+                ...prev,
+                status: data.status ? data.status.toUpperCase() : prev.status,
+                progress_percentage: data.progress || prev.progress_percentage,
+                logs: [...logs, data.log],
+              };
+            }
+            return prev;
+          });
+        }
+
+        if (data.status === 'completed' && data.report_id) {
+          setIsRunning(false);
+          eventSource.close();
+          router.push(`/reports/${data.report_id}`);
+        } else if (data.status === 'failed') {
+          setIsRunning(false);
+          eventSource.close();
+        }
+      } catch (err) {
+        console.warn('SSE message parse error:', err);
+      }
+    };
+
+    eventSource.onerror = () => {
+      eventSource.close();
+    };
+
+    // Fallback polling loop if SSE closes
     const interval = setInterval(async () => {
       try {
         const updated = await intelligenceApi.getTaskStatus(currentTask.id);
@@ -65,9 +106,12 @@ export default function ResearchPage() {
       } catch (err) {
         console.error('Polling error:', err);
       }
-    }, 1200);
+    }, 2000);
 
-    return () => clearInterval(interval);
+    return () => {
+      eventSource.close();
+      clearInterval(interval);
+    };
   }, [currentTask, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {

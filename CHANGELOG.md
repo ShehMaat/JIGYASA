@@ -18,6 +18,17 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 7: Document File Ingestion (PDF/TXT/MD) & Real-Time Live Agent SSE Event Streaming
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/api/v1/endpoints/knowledge.py`, `app/api/v1/endpoints/research.py`), Frontend (`src/app/knowledge/page.tsx`, `src/app/research/page.tsx`, `src/services/api.ts`, `src/types/intelligence.ts`)
+- **Summary of Work:**
+  - **Document File Ingestion Engine (`POST /api/v1/knowledge/upload`)**: Integrated `pypdf` parser in `knowledge.py` supporting `.pdf`, `.txt`, and `.md` file uploads. Automatically parses text, splits content into ~500-word sliding vector chunks, and indexes them into the `VectorDocument` RAG database table.
+  - **Drag-and-Drop Ingestion UI (`/knowledge`)**: Built drag-and-drop document upload modal in `knowledge/page.tsx` with live progress indicator, file format validation, and vector chunk indexing feedback.
+  - **Real-Time Live Agent SSE Event Streaming (`GET /api/v1/research/tasks/{task_id}/stream`)**: Created Server-Sent Events (SSE) streaming endpoint in `research.py` streaming task execution events, web search queries, and agent role transitions in real-time. Connected `EventSource` in `research/page.tsx` for live terminal streaming with fallback polling.
+  - **Verification**: Verified Next.js static build (`npm.cmd run build` — 11 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), file upload REST API test, and RAG vector query over ingested documents.
+
+---
+
 ### [2026-08-23] Phase 6: Automated Competitor Monitoring, Multi-Format Enterprise Exports & Global Command Palette
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/models/monitoring.py`, `app/api/v1/endpoints/monitoring.py`, `app/api/v1/endpoints/research.py`, `app/core/database.py`, `app/api/v1/api.py`), Frontend (`src/app/monitoring/`, `src/app/components/CommandPalette.tsx`, `src/app/layout.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`, `src/app/reports/[id]/page.tsx`)

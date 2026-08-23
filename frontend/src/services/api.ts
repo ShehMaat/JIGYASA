@@ -243,6 +243,24 @@ export const intelligenceApi = {
     }
   },
 
+  async uploadKnowledgeDocument(file: File) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(`${API_BASE_URL}/knowledge/upload`, {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to upload document into knowledge base:', error);
+      return null;
+    }
+  },
+
   async createTracker(payload: { company_name: string; industry: string; target_competitors?: string[]; frequency?: string }) {
     try {
       const response = await fetch(`${API_BASE_URL}/monitoring/trackers`, {

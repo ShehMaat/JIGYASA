@@ -41,6 +41,42 @@ def get_task_status(task_id: str, db: Session = Depends(get_db)):
     return response_data
 
 
+@router.get("/tasks/{task_id}/stream", summary="Stream Real-Time Task Execution Logs (SSE)")
+async def stream_task_logs(task_id: str, db: Session = Depends(get_db)):
+    """
+    Streams real-time task execution events and log lines as Server-Sent Events (SSE).
+    """
+    import asyncio
+    import json
+    from fastapi.responses import StreamingResponse
+
+    async def event_generator():
+        last_log_count = 0
+        while True:
+            db.expire_all()
+            task = db.query(ResearchTask).filter(ResearchTask.id == task_id).first()
+            if not task:
+                yield f"data: {json.dumps({'error': 'Task not found'})}\n\n"
+                break
+
+            logs = task.logs or []
+            if len(logs) > last_log_count:
+                new_logs = logs[last_log_count:]
+                last_log_count = len(logs)
+                for log_msg in new_logs:
+                    yield f"data: {json.dumps({'status': task.status, 'progress': task.progress, 'log': log_msg})}\n\n"
+
+            if task.status in ["completed", "failed"]:
+                report = db.query(MarketReport).filter(MarketReport.task_id == task_id).first()
+                report_id = report.id if report else None
+                yield f"data: {json.dumps({'status': task.status, 'progress': 100, 'log': 'Execution finished.', 'report_id': report_id})}\n\n"
+                break
+
+            await asyncio.sleep(0.5)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
 @router.get("/reports/{report_id}", response_model=MarketReportResponse, summary="Get Full Market Report")
 def get_market_report(report_id: str, db: Session = Depends(get_db)):
     """
