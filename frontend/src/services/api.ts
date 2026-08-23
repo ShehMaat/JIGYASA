@@ -607,6 +607,19 @@ export const intelligenceApi = {
       return { query, total: 0, results: [] };
     }
   },
+
+  // ─── Phase 17: Intelligence Graph ─────────────────────────────────────────
+
+  async getGraphData() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/graph/nodes`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to fetch graph data:', error);
+      return null;
+    }
+  },
 };
 
 

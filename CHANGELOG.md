@@ -20,9 +20,24 @@ For every change / commit, we document:
 
 ---
 
-### [2026-08-23] Phase 16: Global Search Engine & In-App Notification Bell
+### [2026-08-23] Phase 17: Interactive Intelligence Graph & Entity Relationship Map
 - **Status:** Completed ✅
 - **Commit:** `TBD — pending push`
+- **Components:** Backend (`app/api/v1/endpoints/graph.py`), Frontend (`graph/page.tsx`, `Sidebar.tsx`, `api.ts`)
+- **Summary of Work:**
+  - Built `GET /api/v1/graph/nodes` — dynamic topology engine compiling companies, industries, dossiers, projects, and scheduled jobs with directed relationship links.
+  - Built `/graph` interactive 2D canvas force-directed graph visualization dashboard with particle repulsion physics, node dragging, smooth pan & zoom.
+  - Added real-time entity filter chips (`Companies`, `Industries`, `Dossiers`, `Projects`, `Schedules`), node text search, hover tooltips, and click-to-inspect Node Detail Drawer.
+  - Added `🌐 Intelligence Graph` to sidebar navigation.
+  - ESLint clean (0 errors).
+
+---
+
+
+
+### [2026-08-23] Phase 16: Global Search Engine & In-App Notification Bell
+- **Status:** Completed ✅
+- **Commit:** `0d6e9df`
 - **Components:** Backend (`app/api/v1/endpoints/search.py`), Frontend (`SearchModal.tsx`, `NotificationBell.tsx`, `LayoutShell.tsx`, `layout.tsx`)
 - **Summary of Work:**
   - Built `GET /api/v1/search?q=` — unified multi-entity search across reports, projects, knowledge docs, monitoring targets, and scheduled research with relevance scoring.

@@ -21,6 +21,7 @@ const mainNav: NavItem[] = [
   { label: 'Analytics', href: '/analytics', icon: '📈' },
   { label: 'Prompt Studio', href: '/prompts', icon: '🤖' },
   { label: 'Scheduled Research', href: '/scheduled', icon: '⏰' },
+  { label: 'Intelligence Graph', href: '/graph', icon: '🌐' },
   { label: 'Activity Feed', href: '/activity', icon: '📣' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
