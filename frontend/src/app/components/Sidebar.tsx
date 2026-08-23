@@ -16,6 +16,7 @@ const mainNav: NavItem[] = [
   { label: 'Workspaces', href: '/projects', icon: '📁' },
   { label: 'Compare Matrix', href: '/compare', icon: '📐' },
   { label: 'Knowledge RAG', href: '/knowledge', icon: '🧠' },
+  { label: 'Monitoring', href: '/monitoring', icon: '📡' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
 

@@ -18,6 +18,17 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 6: Automated Competitor Monitoring, Multi-Format Enterprise Exports & Global Command Palette
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/models/monitoring.py`, `app/api/v1/endpoints/monitoring.py`, `app/api/v1/endpoints/research.py`, `app/core/database.py`, `app/api/v1/api.py`), Frontend (`src/app/monitoring/`, `src/app/components/CommandPalette.tsx`, `src/app/layout.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`, `src/app/reports/[id]/page.tsx`)
+- **Summary of Work:**
+  - **Automated Competitor Monitoring Engine (`/monitoring`)**: Built DB models (`CompetitorTracker`, `CompetitorAlert`) and REST endpoints (`POST/GET /monitoring/trackers`, `GET /monitoring/alerts`, `POST /monitoring/trackers/{id}/scan`). Created monitoring dashboard UI with tracker creation modal, instant web re-scan triggers, and live competitor shift alert feed.
+  - **Multi-Format Enterprise Exporter**: Upgraded `GET /reports/{id}/export` to support 4 presentation formats: Markdown (`.md`), CSV (`.csv`), HTML (`.html`), and JSON (`.json`). Added direct multi-format export buttons to the Report Viewer (`/reports/[id]`).
+  - **Global Command Palette (`Cmd+K`)**: Built `CommandPalette.tsx` spotlight search modal triggerable globally via `Cmd+K` or `Ctrl+K` across all app pages with real-time fuzzy search over app navigation routes, generated reports, and research workspaces.
+  - **Verification & Verification**: Clean Next.js static build (`npm.cmd run build` — 11 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), and verified backend API response payload tests.
+
+---
+
 ### [2026-08-22] Phase 5: Advanced Intelligence Workspaces, Battlecard Comparison & Vector RAG Engine
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/services/rag_service.py`, `app/api/v1/endpoints/knowledge.py`, `app/api/v1/api.py`), Frontend (`src/app/projects/`, `src/app/compare/`, `src/app/knowledge/`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`)

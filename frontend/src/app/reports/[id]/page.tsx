@@ -50,13 +50,6 @@ export default function ReportViewerPage() {
     }
   };
 
-  const handleDownload = () => {
-    if (report) {
-      const filename = `${report.title.toLowerCase().replace(/[^a-z0-9]+/g, '_')}.md`;
-      intelligenceApi.downloadMarkdownExport(report.id, filename);
-    }
-  };
-
   const parseShareNumber = (shareStr: string = '10%') => {
     const match = shareStr.match(/\d+/);
     return match ? parseInt(match[0], 10) : 15;
@@ -101,7 +94,18 @@ export default function ReportViewerPage() {
           <button className="btn-secondary" onClick={handleCopy}>
             {copySuccess ? '✅ Copied!' : '📋 Copy Summary'}
           </button>
-          <button className="btn-secondary" onClick={handleDownload}>📥 Export MD</button>
+          <button className="btn-secondary" onClick={() => intelligenceApi.downloadReportExport(report.id, 'markdown')}>
+            📥 Export MD
+          </button>
+          <button className="btn-secondary" onClick={() => intelligenceApi.downloadReportExport(report.id, 'csv')}>
+            📊 Export CSV
+          </button>
+          <button className="btn-secondary" onClick={() => intelligenceApi.downloadReportExport(report.id, 'html')}>
+            🌐 Export HTML
+          </button>
+          <button className="btn-secondary" onClick={() => intelligenceApi.downloadReportExport(report.id, 'json')}>
+            ⚙️ Export JSON
+          </button>
           <button className="btn-secondary" onClick={() => window.print()}>🖨️ Print PDF</button>
         </div>
       </div>

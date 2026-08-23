@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "./components/Sidebar";
+import CommandPalette from "./components/CommandPalette";
 
 export const metadata: Metadata = {
   title: "Alkame Intelligence — AI Market Research & Competitor Analysis Platform",
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body>
         <div className="app-layout">
           <Sidebar />
+          <CommandPalette />
           <main className="app-main">
             {children}
           </main>

@@ -202,6 +202,32 @@ export const intelligenceApi = {
     }
   },
 
+  async downloadReportExport(reportId: string, format: string = 'markdown') {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/reports/${reportId}/export?format=${format}`);
+      if (response.ok) {
+        const text = await response.text();
+        const mimeTypes: Record<string, string> = {
+          markdown: 'text/markdown',
+          csv: 'text/csv',
+          html: 'text/html',
+          json: 'application/json',
+        };
+        const ext = format === 'markdown' ? 'md' : format;
+        const blob = new Blob([text], { type: mimeTypes[format] || 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `market_dossier_${reportId}.${ext}`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        return;
+      }
+    } catch (e) {
+      console.warn(`Backend export for ${format} failed:`, e);
+    }
+  },
+
   async indexKnowledge(title: string, content: string, sourceUrl?: string) {
     try {
       const response = await fetch(`${API_BASE_URL}/knowledge/index`, {
@@ -214,6 +240,68 @@ export const intelligenceApi = {
     } catch (error) {
       console.warn('Failed to index document into knowledge base:', error);
       return null;
+    }
+  },
+
+  async createTracker(payload: { company_name: string; industry: string; target_competitors?: string[]; frequency?: string }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/monitoring/trackers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to create tracker:', error);
+      return null;
+    }
+  },
+
+  async listTrackers() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/monitoring/trackers`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list trackers:', error);
+      return [];
+    }
+  },
+
+  async listAlerts() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/monitoring/alerts`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list alerts:', error);
+      return [];
+    }
+  },
+
+  async rescanTracker(trackerId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/monitoring/trackers/${trackerId}/scan`, {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to rescan tracker:', error);
+      return null;
+    }
+  },
+
+  async deleteTracker(trackerId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/monitoring/trackers/${trackerId}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete tracker:', error);
+      return false;
     }
   }
 };
