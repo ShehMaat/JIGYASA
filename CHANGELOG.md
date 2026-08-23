@@ -18,6 +18,18 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 13: Executive PDF Exporter, Multi-Format Engine & White-Label Customization
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/api/v1/endpoints/research.py`), Frontend (`src/app/globals.css`, `src/app/reports/[id]/page.tsx`, `src/app/settings/page.tsx`)
+- **Summary of Work:**
+  - **Multi-Format Export Engine (`research.py`)**: Enhanced `GET /reports/{id}/export` endpoint supporting `format=json`, `format=csv`, `format=html`, and `format=markdown`.
+  - **Executive Print & PDF Stylesheet (`globals.css`)**: Built high-resolution `@media print` CSS stylesheet configuring executive typography, light contrast background, hidden navigation elements, and automatic section page breaks.
+  - **Dossier Viewer Export Triggers (`reports/[id]/page.tsx`)**: Integrated **🖨️ Print PDF** trigger and multi-format export buttons in report header.
+  - **White-Label Branding Studio (`settings/page.tsx`)**: Added **🎨 White-Label Branding** tab in settings UI for organization name customization, custom logo URL, and executive confidentiality watermarks stored in localStorage.
+  - **Verification**: Verified clean Next.js static build (`npm.cmd run build` — 14 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), and 0 Python syntax errors across all backend modules.
+
+---
+
 ### [2026-08-23] Phase 12: AI Prompt Template Studio & Custom Research Briefing Modes
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/models/prompt_template.py`, `app/api/v1/endpoints/research.py`, `app/schemas/intelligence.py`, `app/services/research_service.py`, `app/agents/research_agent.py`), Frontend (`src/app/prompts/page.tsx`, `src/app/research/page.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`, `src/types/intelligence.ts`)

@@ -14,7 +14,7 @@ interface Webhook {
 }
 
 export default function SettingsPage() {
-  const [tab, setTab] = useState<'overview' | 'api_docs' | 'webhooks'>('overview');
+  const [tab, setTab] = useState<'overview' | 'api_docs' | 'webhooks' | 'branding'>('overview');
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
   const docsUrl = apiUrl.replace('/api/v1', '/docs');
 
@@ -25,11 +25,35 @@ export default function SettingsPage() {
   const [testingId, setTestingId] = useState<string | null>(null);
   const [testResult, setTestResult] = useState<{ success: boolean; message: string } | null>(null);
 
+  // White-label branding state
+  const [orgName, setOrgName] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('jigyasa_org_name') || 'JIGYASA Enterprise';
+    return 'JIGYASA Enterprise';
+  });
+  const [watermark, setWatermark] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('jigyasa_watermark') || 'CONFIDENTIAL — FOR INTERNAL EXECUTIVE USE ONLY';
+    return 'CONFIDENTIAL — FOR INTERNAL EXECUTIVE USE ONLY';
+  });
+  const [logoUrl, setLogoUrl] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('jigyasa_logo_url') || '';
+    return '';
+  });
+  const [brandingSaved, setBrandingSaved] = useState(false);
+
   useEffect(() => {
     if (tab === 'webhooks') {
       loadWebhooks();
     }
   }, [tab]);
+
+  function handleSaveBranding(e: React.FormEvent) {
+    e.preventDefault();
+    localStorage.setItem('jigyasa_org_name', orgName);
+    localStorage.setItem('jigyasa_watermark', watermark);
+    localStorage.setItem('jigyasa_logo_url', logoUrl);
+    setBrandingSaved(true);
+    setTimeout(() => setBrandingSaved(false), 2500);
+  }
 
   async function loadWebhooks() {
     const list = await intelligenceApi.listWebhooks();
@@ -116,6 +140,14 @@ export default function SettingsPage() {
           id="webhooks-tab"
         >
           🔔 Webhooks & Integrations
+        </button>
+        <button
+          type="button"
+          className={`tab-btn ${tab === 'branding' ? 'active' : ''}`}
+          onClick={() => setTab('branding')}
+          id="branding-tab"
+        >
+          🎨 White-Label Branding
         </button>
       </div>
 
@@ -302,6 +334,66 @@ export default function SettingsPage() {
                 ))}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {tab === 'branding' && (
+        <div style={{ maxWidth: '720px' }}>
+          <div className="glass-panel animate-in" style={{ padding: '28px' }}>
+            <h3 style={{ fontSize: '1rem', fontWeight: '600', marginBottom: '8px' }}>
+              🎨 Organization & PDF Report White-Label Branding
+            </h3>
+            <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '24px' }}>
+              Customize corporate branding, executive headers, custom logo URL, and PDF print confidentiality watermarks.
+            </p>
+
+            <form onSubmit={handleSaveBranding} style={{ display: 'grid', gap: '16px' }}>
+              <div>
+                <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                  Organization Name
+                </label>
+                <input
+                  className="input-field"
+                  value={orgName}
+                  onChange={(e) => setOrgName(e.target.value)}
+                  placeholder="e.g. Acme Global Intelligence"
+                  required
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                  Executive Confidentiality Watermark
+                </label>
+                <input
+                  className="input-field"
+                  value={watermark}
+                  onChange={(e) => setWatermark(e.target.value)}
+                  placeholder="e.g. CONFIDENTIAL — FOR BOARD & EXECUTIVE USE ONLY"
+                  required
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', display: 'block', marginBottom: '4px' }}>
+                  Organization Logo URL (Optional)
+                </label>
+                <input
+                  className="input-field"
+                  value={logoUrl}
+                  onChange={(e) => setLogoUrl(e.target.value)}
+                  placeholder="https://example.com/logo.png"
+                />
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+                <button type="submit" className="btn-primary">
+                  💾 Save Branding Settings
+                </button>
+                {brandingSaved && <span style={{ color: '#4ade80', fontSize: '0.85rem', fontWeight: '600' }}>✅ Settings Saved!</span>}
+              </div>
+            </form>
           </div>
         </div>
       )}
