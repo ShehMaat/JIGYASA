@@ -19,6 +19,7 @@ const mainNav: NavItem[] = [
   { label: 'Knowledge RAG', href: '/knowledge', icon: '🧠' },
   { label: 'Monitoring', href: '/monitoring', icon: '📡' },
   { label: 'Analytics', href: '/analytics', icon: '📈' },
+  { label: 'Prompt Studio', href: '/prompts', icon: '🤖' },
   { label: 'Report History', href: '/reports', icon: '📋' },
 ];
 

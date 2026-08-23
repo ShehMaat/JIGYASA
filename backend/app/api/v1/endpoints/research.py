@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Response
 from sqlalchemy.orm import Session
 from typing import List, Optional
+from pydantic import BaseModel
 
 from app.core.database import get_db
 from app.models.intelligence import ResearchTask, MarketReport, TaskStatus
@@ -404,4 +405,94 @@ def get_analytics_summary(db: Session = Depends(get_db)):
         },
         "competitor_positions": competitor_positions,
     }
+
+
+class PromptTemplateCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    system_prompt: str
+    category: Optional[str] = "General"
+
+
+@router.get("/prompts", summary="List AI Prompt Templates")
+def list_prompt_templates(db: Session = Depends(get_db)):
+    """
+    Returns available AI Prompt Templates. Seeds default templates if database is empty.
+    """
+    from app.models.prompt_template import PromptTemplate
+    templates = db.query(PromptTemplate).all()
+
+    if not templates:
+        defaults = [
+            PromptTemplate(
+                id="tpl-std",
+                title="Standard Strategic Intelligence Brief",
+                description="Comprehensive 360° market sizing, competitor matrix, SWOT, and strategic action roadmap.",
+                system_prompt="Focus on balanced 360-degree market analysis, competitive positioning, and actionable growth strategy.",
+                category="General",
+                is_default=True
+            ),
+            PromptTemplate(
+                id="tpl-ma",
+                title="M&A & Valuation Multiples Brief",
+                description="Deep dive into financial metrics, revenue estimates, valuation multiples, and M&A targets.",
+                system_prompt="Focus heavily on revenue estimation, ARR/EV multiples, profitability signals, unit economics, and M&A valuation metrics.",
+                category="Financial",
+                is_default=False
+            ),
+            PromptTemplate(
+                id="tpl-prod",
+                title="Product & Feature Deepdive Battlecard",
+                description="Feature-by-feature parity comparison, UX benchmarks, and technical product differentiators.",
+                system_prompt="Focus on detailed technical feature parity, API integrations, UX friction points, and product differentiation.",
+                category="Product",
+                is_default=False
+            ),
+            PromptTemplate(
+                id="tpl-vc",
+                title="VC & Investor Due Diligence Summary",
+                description="Market TAM/CAGR validation, founder moat evaluation, regulatory risks, and exit vectors.",
+                system_prompt="Focus on market TAM validation, defensible competitive moats, regulatory risk assessment, and venture exit potential.",
+                category="Venture Capital",
+                is_default=False
+            )
+        ]
+        for d in defaults:
+            db.add(d)
+        db.commit()
+        templates = db.query(PromptTemplate).all()
+
+    return templates
+
+
+@router.post("/prompts", summary="Create Custom AI Prompt Template")
+def create_prompt_template(payload: PromptTemplateCreate, db: Session = Depends(get_db)):
+    """Creates a custom system prompt template for market analysis."""
+    from app.models.prompt_template import PromptTemplate
+    import uuid
+
+    template = PromptTemplate(
+        id=str(uuid.uuid4()),
+        title=payload.title,
+        description=payload.description,
+        system_prompt=payload.system_prompt,
+        category=payload.category,
+        is_default=False
+    )
+    db.add(template)
+    db.commit()
+    db.refresh(template)
+    return template
+
+
+@router.delete("/prompts/{template_id}", summary="Delete Prompt Template")
+def delete_prompt_template(template_id: str, db: Session = Depends(get_db)):
+    """Deletes a custom prompt template."""
+    from app.models.prompt_template import PromptTemplate
+    template = db.query(PromptTemplate).filter(PromptTemplate.id == template_id).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Prompt template not found.")
+    db.delete(template)
+    db.commit()
+    return {"status": "deleted", "id": template_id}
 

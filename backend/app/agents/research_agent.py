@@ -81,13 +81,15 @@ class MarketResearchAgent:
         industry: str,
         target_competitors: List[str] = None,
         focus_areas: List[str] = None,
-        depth: str = "standard"
+        depth: str = "comprehensive",
+        custom_prompt_instructions: Optional[str] = None
     ):
         self.company_name = company_name
         self.industry = industry
         self.target_competitors = target_competitors or []
         self.focus_areas = focus_areas or ["pricing", "features", "market_share", "gtm_strategy"]
         self.depth = depth
+        self.custom_prompt_instructions = custom_prompt_instructions
 
     def run_agent_workflow(self, progress_callback=None) -> Dict[str, Any]:
         def report_step(step_name: str, percent: int, log_msg: str):
@@ -180,6 +182,9 @@ USER SPECIFIED COMPETITORS:
 
 FOCUS DIMENSIONS:
 {json.dumps(self.focus_areas)}
+
+CUSTOM EXECUTIVE BRIEFING INSTRUCTIONS:
+{self.custom_prompt_instructions or 'Standard Comprehensive Analysis Mode'}
 
 RESEARCH DEPTH: {self.depth}
 

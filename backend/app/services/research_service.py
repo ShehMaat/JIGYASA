@@ -58,12 +58,20 @@ class ResearchService:
             task.status = TaskStatus.IN_PROGRESS
             db.commit()
 
+            custom_instructions = None
+            if hasattr(task, 'prompt_template_id') and task.prompt_template_id:
+                from app.models.prompt_template import PromptTemplate
+                template = db.query(PromptTemplate).filter(PromptTemplate.id == task.prompt_template_id).first()
+                if template:
+                    custom_instructions = template.system_prompt
+
             agent = MarketResearchAgent(
                 company_name=task.company_name,
                 industry=task.industry,
                 target_competitors=task.target_competitors,
                 focus_areas=task.focus_areas,
-                depth=task.depth
+                depth=task.depth,
+                custom_prompt_instructions=custom_instructions
             )
 
             def progress_callback(step_name: str, percent: int, log_msg: str):

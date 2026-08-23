@@ -18,6 +18,19 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 12: AI Prompt Template Studio & Custom Research Briefing Modes
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/models/prompt_template.py`, `app/api/v1/endpoints/research.py`, `app/schemas/intelligence.py`, `app/services/research_service.py`, `app/agents/research_agent.py`), Frontend (`src/app/prompts/page.tsx`, `src/app/research/page.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`, `src/types/intelligence.ts`)
+- **Summary of Work:**
+  - **Prompt Template Database Model (`prompt_template.py`)**: Created `PromptTemplate` table for custom AI agent system prompts (`title`, `description`, `system_prompt`, `category`, `is_default`).
+  - **REST API Endpoints (`research.py`)**: Implemented `GET /prompts`, `POST /prompts`, and `DELETE /prompts/{id}` with 4 pre-seeded templates (Standard Strategic, M&A & Financial Valuation Multiples, Product Feature Battlecard, VC Due Diligence Summary).
+  - **Agent Custom Prompt Injection (`research_agent.py` & `research_service.py`)**: Enhanced AI agent workflow to ingest custom template system prompts during live market analysis synthesis.
+  - **AI Prompt Studio Page (`/prompts`)**: Built interactive studio page allowing analysts to view template cards, system prompts, and save custom briefing prompts. Added link to `Sidebar.tsx`.
+  - **Research Launcher Template Selector (`/research`)**: Integrated prompt template dropdown into task launcher form.
+  - **Verification**: Verified REST API endpoint response (`GET /prompts` returning 4 seeded templates), clean Next.js production build (`npm.cmd run build` — 14 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), and 0 Python syntax errors.
+
+---
+
 ### [2026-08-23] Phase 11: Enterprise Webhook Event Notifications & Slack/Teams Integrations
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/models/webhook.py`, `app/services/webhook_service.py`, `app/api/v1/endpoints/notifications.py`, `app/api/v1/api.py`, `app/core/database.py`), Frontend (`src/app/settings/page.tsx`, `src/services/api.ts`)

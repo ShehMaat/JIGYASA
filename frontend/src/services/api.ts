@@ -431,6 +431,44 @@ export const intelligenceApi = {
       console.warn('Failed to delete webhook:', error);
       return false;
     }
+  },
+
+  async listPromptTemplates() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/prompts`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list prompt templates:', error);
+      return [];
+    }
+  },
+
+  async createPromptTemplate(payload: { title: string; description?: string; system_prompt: string; category?: string }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/prompts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to create prompt template:', error);
+      return null;
+    }
+  },
+
+  async deletePromptTemplate(templateId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/research/prompts/${templateId}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete prompt template:', error);
+      return false;
+    }
   }
 };
 

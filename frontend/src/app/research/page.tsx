@@ -23,6 +23,8 @@ export default function ResearchPage() {
   const [competitors, setCompetitors] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState<string>('');
   const [projects, setProjects] = useState<Array<{ id: string; name: string }>>([]);
+  const [promptTemplates, setPromptTemplates] = useState<Array<{ id: string; title: string; category?: string }>>([]);
+  const [selectedPromptId, setSelectedPromptId] = useState<string>('');
   const [depth, setDepth] = useState<'quick' | 'standard' | 'comprehensive'>('standard');
   const [selectedFocus, setSelectedFocus] = useState<string[]>([
     'pricing', 'features', 'market_share', 'gtm_strategy',
@@ -33,15 +35,17 @@ export default function ResearchPage() {
   const [isRunning, setIsRunning] = useState(false);
 
   useEffect(() => {
-    async function fetchProjects() {
+    async function fetchData() {
       try {
         const list = await intelligenceApi.listProjects();
         setProjects(list);
+        const tpls = await intelligenceApi.listPromptTemplates();
+        setPromptTemplates(tpls || []);
       } catch {
         // fallback
       }
     }
-    fetchProjects();
+    fetchData();
   }, []);
 
   // Poll task
@@ -134,6 +138,7 @@ export default function ResearchPage() {
         focus_areas: selectedFocus,
         depth: depth,
         project_id: selectedProjectId || undefined,
+        prompt_template_id: selectedPromptId || undefined,
       });
       setCurrentTask(task);
     } catch (err) {
@@ -227,6 +232,25 @@ export default function ResearchPage() {
               {projects.map((p) => (
                 <option key={p.id} value={p.id}>
                   📁 {p.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div style={{ marginBottom: '16px' }}>
+            <label style={{ fontSize: '0.82rem', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>
+              🤖 AI Briefing Strategy Template (Optional)
+            </label>
+            <select
+              className="input-field"
+              value={selectedPromptId}
+              onChange={(e) => setSelectedPromptId(e.target.value)}
+              id="prompt-template-select"
+            >
+              <option value="">-- Standard 360° Strategic Brief (Default) --</option>
+              {promptTemplates.map((t) => (
+                <option key={t.id} value={t.id}>
+                  ✨ {t.title} ({t.category || 'General'})
                 </option>
               ))}
             </select>

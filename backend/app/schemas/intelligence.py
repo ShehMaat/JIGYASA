@@ -22,6 +22,7 @@ class ResearchRequest(BaseModel):
     )
     depth: Optional[str] = Field(default="standard", description="quick, standard, or comprehensive")
     project_id: Optional[str] = None
+    prompt_template_id: Optional[str] = None
 
 
 class CompetitorProfile(BaseModel):

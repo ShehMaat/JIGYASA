@@ -94,6 +94,7 @@ export interface ResearchRequestPayload {
   focus_areas?: string[];
   depth?: 'quick' | 'standard' | 'comprehensive';
   project_id?: string | null;
+  prompt_template_id?: string | null;
 }
 
 export interface Project {
