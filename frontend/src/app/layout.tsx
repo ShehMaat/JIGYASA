@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Sidebar from "./components/Sidebar";
 import CommandPalette from "./components/CommandPalette";
+import NotificationBell from "./components/NotificationBell";
+import SearchModal from "./components/SearchModal";
 import { AuthProvider } from "../context/AuthContext";
+import LayoutShell from "./components/LayoutShell";
 
 export const metadata: Metadata = {
   title: "JIGYASA Intelligence — AI Market Research & Competitor Analysis Platform",
@@ -23,13 +26,14 @@ export default function RootLayout({
       </head>
       <body>
         <AuthProvider>
-          <div className="app-layout">
-            <Sidebar />
-            <CommandPalette />
-            <main className="app-main">
-              {children}
-            </main>
-          </div>
+          <LayoutShell
+            sidebar={<Sidebar />}
+            commandPalette={<CommandPalette />}
+            notificationBell={<NotificationBell />}
+            searchModal={SearchModal}
+          >
+            {children}
+          </LayoutShell>
         </AuthProvider>
       </body>
     </html>

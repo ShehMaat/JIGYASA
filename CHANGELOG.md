@@ -18,6 +18,50 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+---
+
+### [2026-08-23] Phase 16: Global Search Engine & In-App Notification Bell
+- **Status:** Completed ✅
+- **Commit:** `TBD — pending push`
+- **Components:** Backend (`app/api/v1/endpoints/search.py`), Frontend (`SearchModal.tsx`, `NotificationBell.tsx`, `LayoutShell.tsx`, `layout.tsx`)
+- **Summary of Work:**
+  - Built `GET /api/v1/search?q=` — unified multi-entity search across reports, projects, knowledge docs, monitoring targets, and scheduled research with relevance scoring.
+  - Created `SearchModal.tsx` — full-screen glassmorphism overlay with debounced real-time search, grouped results by type, and full keyboard navigation (↑↓ + Enter).
+  - Global `Ctrl+K` shortcut opens/closes search modal from anywhere in the app.
+  - Created `NotificationBell.tsx` — animated bell icon in top header with unread count badge (red dot + number), 30s auto-refresh, slide-out notification drawer, Mark All Read with `localStorage` persistence.
+  - Created `LayoutShell.tsx` — client wrapper managing search state and rendering the persistent 52px top header bar with search trigger + notification bell.
+  - Injected `LayoutShell` into `layout.tsx` replacing old static `app-layout` div.
+
+---
+
+### [2026-08-23] Phase 15: Scheduled Research Automation & Intelligence Digest Engine
+- **Status:** Completed ✅
+- **Commit:** `067a423`
+- **Components:** Backend (`app/models/schedule.py`, `app/api/v1/endpoints/schedules.py`, `app/main.py`), Frontend (`scheduled/page.tsx`, `Sidebar.tsx`, `api.ts`)
+- **Summary of Work:**
+  - Installed `apscheduler 3.11.3` and integrated `BackgroundScheduler` via FastAPI `asynccontextmanager` lifespan hook.
+  - Scheduler polls every 5 minutes for active `ScheduledResearch` jobs where `next_run_at <= now()`.
+  - Full CRUD REST API: create, list, toggle (pause/resume), run-now, delete, and digest endpoints.
+  - Post-run AI digest generator creates 3-bullet executive briefing per scheduled job; stored in `ActivityEvent` as `schedule.digest.ready`.
+  - Built `/scheduled` dashboard: schedule cards with live countdown, create modal with frequency picker, Run Now, Pause/Resume, digest accordion.
+  - Added `⏰ Scheduled Research` to sidebar navigation.
+
+---
+
+### [2026-08-23] Phase 14: Dossier Comments, Activity Feed & Team Collaboration
+- **Status:** Completed ✅
+- **Commit:** `7fd0005`
+- **Components:** Backend (`app/models/comment.py`, `app/models/activity.py`, `app/api/v1/endpoints/comments.py`), Frontend (`activity/page.tsx`, `reports/[id]/page.tsx`, `Sidebar.tsx`, `api.ts`)
+- **Summary of Work:**
+  - Created `DossierComment` model and `ActivityEvent` model for platform-wide audit trail.
+  - REST API: `POST/GET /comments/reports/{id}`, `DELETE /comments/{id}`, `GET /comments/activity/feed`.
+  - Every comment auto-logs an `ActivityEvent` (event_type: `comment.posted`).
+  - Built `/activity` — platform timeline with stats bar, filter chips, event-type colour coding, auto-refresh toggle.
+  - Added `💬 Comments` tab to dossier viewer (`/reports/[id]`) with post/delete annotations and avatar initials.
+  - Added `📣 Activity Feed` and `🔗 Integrations` to sidebar navigation.
+
+---
+
 ### [2026-08-23] Phase 13: Executive PDF Exporter, Multi-Format Engine & White-Label Customization
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/api/v1/endpoints/research.py`), Frontend (`src/app/globals.css`, `src/app/reports/[id]/page.tsx`, `src/app/settings/page.tsx`)

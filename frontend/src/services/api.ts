@@ -592,7 +592,23 @@ export const intelligenceApi = {
       return null;
     }
   },
+
+  // ─── Phase 16: Global Search ──────────────────────────────────────────────
+
+  async globalSearch(query: string, types?: string) {
+    try {
+      const params = new URLSearchParams({ q: query });
+      if (types) params.set('types', types);
+      const response = await fetch(`${API_BASE_URL}/search/?${params.toString()}`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Global search failed:', error);
+      return { query, total: 0, results: [] };
+    }
+  },
 };
+
 
 
 
