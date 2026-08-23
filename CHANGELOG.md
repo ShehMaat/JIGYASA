@@ -18,6 +18,18 @@ For every change / commit, we document:
 
 ## 📜 Log of Commitments & Changes
 
+### [2026-08-23] Phase 11: Enterprise Webhook Event Notifications & Slack/Teams Integrations
+- **Status:** Completed & Verified
+- **Components:** Backend (`app/models/webhook.py`, `app/services/webhook_service.py`, `app/api/v1/endpoints/notifications.py`, `app/api/v1/api.py`, `app/core/database.py`), Frontend (`src/app/settings/page.tsx`, `src/services/api.ts`)
+- **Summary of Work:**
+  - **Webhook Engine & Database Model (`webhook.py`)**: Created `WebhookSubscription` table storing target endpoints, subscribed events (`task.completed`, `competitor.alert`, `knowledge.ingested`), and HMAC-SHA256 secret keys.
+  - **Asynchronous Event Dispatcher (`webhook_service.py`)**: Built async dispatcher delivering HMAC-SHA256 signed HTTP POST payloads (`X-Jigyasa-Signature`) to external endpoints via `httpx`.
+  - **REST API Endpoints (`notifications.py`)**: Developed `POST /api/v1/notifications/webhooks`, `GET /webhooks`, `DELETE /webhooks/{id}`, and `POST /webhooks/{id}/test` sending live test ping payloads. Registered router in `api.py`.
+  - **Webhooks & Integrations Settings UI (`settings/page.tsx`)**: Created new **🔔 Webhooks & Integrations** tab in settings UI for webhook URL registration, secret key display, event subscription toggles, and live **🧪 Test Ping** execution.
+  - **Verification**: Verified clean Next.js static build (`npm.cmd run build` — 13 routes compiled), 0 ESLint warnings (`npm.cmd run lint`), webhook creation REST API test, and live webhook test ping execution (`HTTP 200` with HMAC-SHA256 signature).
+
+---
+
 ### [2026-08-23] Phase 10: Enterprise Macro Analytics Dashboard, Executive Presentation Mode & Final Polish
 - **Status:** Completed & Verified
 - **Components:** Backend (`app/api/v1/endpoints/research.py`), Frontend (`src/app/analytics/page.tsx`, `src/app/components/PresentationModal.tsx`, `src/app/reports/[id]/page.tsx`, `src/app/components/Sidebar.tsx`, `src/services/api.ts`), Documentation (`README.md`)

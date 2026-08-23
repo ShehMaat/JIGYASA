@@ -380,6 +380,57 @@ export const intelligenceApi = {
       console.warn('Failed to fetch analytics summary:', error);
       return null;
     }
+  },
+
+  async listWebhooks() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/webhooks`);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to list webhooks:', error);
+      return [];
+    }
+  },
+
+  async createWebhook(payload: { name: string; url: string; events?: string[] }) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/webhooks`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to create webhook:', error);
+      return null;
+    }
+  },
+
+  async testWebhook(webhookId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/webhooks/${webhookId}/test`, {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      return await response.json();
+    } catch (error) {
+      console.warn('Failed to test webhook:', error);
+      return null;
+    }
+  },
+
+  async deleteWebhook(webhookId: string) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/notifications/webhooks/${webhookId}`, {
+        method: 'DELETE',
+      });
+      return response.ok;
+    } catch (error) {
+      console.warn('Failed to delete webhook:', error);
+      return false;
+    }
   }
 };
 
