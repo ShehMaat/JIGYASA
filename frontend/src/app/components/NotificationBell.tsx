@@ -65,7 +65,7 @@ export default function NotificationBell() {
     let es: EventSource | null = null;
     if (typeof window !== 'undefined' && 'EventSource' in window) {
       try {
-        es = new EventSource('http://127.0.0.1:8000/api/v1/notifications/stream');
+        es = new EventSource('/api/v1/notifications/stream');
         es.onmessage = () => {
           fetchEvents();
         };
