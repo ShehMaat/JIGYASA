@@ -21,8 +21,9 @@ For every change / commit, we document:
 ---
 
 ### [2026-08-23] Phase 22–24: Final Project Completion & Telemetry Launch 🚀
+- **Security Update:** Hidden backend API URL from public clients by setting up Next.js internal server rewrites (`/api/v1` → `http://127.0.0.1:8000/api/v1`).
 - **Status:** Completed ✅ (100% Production Ready)
-- **Commit:** `fb8a248`
+- **Commit:** `7f270c8`
 - **Components:** Backend (`notifications.py`, `system.py`, `api.py`), Frontend (`system-health/page.tsx`, `NotificationBell.tsx`, `Sidebar.tsx`, `api.ts`), Docs (`DEPLOYMENT.md`)
 - **Summary of Work:**
   - Built **Phase 22**: Real-time Server-Sent Events (SSE) notification stream (`GET /api/v1/notifications/stream`) connected to `NotificationBell.tsx` for zero-latency instant updates.
